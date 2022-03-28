@@ -1,7 +1,7 @@
 -- @Author              : GGELUA
 -- @Date                : 2022-03-07 18:52:00
 -- @Last Modified by    : baidwwy
--- @Last Modified time  : 2022-03-28 07:25:09
+-- @Last Modified time  : 2022-03-28 19:38:33
 
 local gge = require('ggelua')
 local SDL = require('SDL')
@@ -23,7 +23,7 @@ function SDL文字:SDL文字(file, size, aliasing, w)
     self._rnw = w --折行宽度
     self._size = tonumber(size) or 14
     self._ref = 1
-
+    self._style = 0
     local tp = ggetype(file)
     if tp == 'string' then
         self._file = file

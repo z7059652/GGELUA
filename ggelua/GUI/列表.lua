@@ -1,7 +1,7 @@
 -- @Author: baidwwy
 -- @Date:   2021-07-10 16:32:33
 -- @Last Modified by    : baidwwy
--- @Last Modified time  : 2022-03-28 14:35:51
+-- @Last Modified time  : 2022-03-28 20:29:08
 
 local SDL = require 'SDL'
 
@@ -82,14 +82,7 @@ do
         if self.焦点精灵 and self.焦点精灵.更新 then
             self.焦点精灵:更新(dt)
         end
-        if self._ref then
-            self._ref = nil
-            _刷新列表(self)
-            if self._max ~= 0 and self._auto then --自动滚动
-                self._py = -self._max
-                _滚动(self)
-            end
-        end
+        self:刷新()
     end
 
     function GUI列表:_显示(...)
@@ -111,6 +104,17 @@ do
         end
         self._win:置区域()
         GUI控件._显示(self, ...)
+    end
+
+    function GUI列表:刷新()
+        if self._ref then
+            self._ref = nil
+            _刷新列表(self)
+            if self._max ~= 0 and self._auto then --自动滚动
+                self._py = -self._max
+                _滚动(self)
+            end
+        end
     end
 
     function GUI列表:清空()
@@ -143,7 +147,18 @@ do
         列项.置高度 = function(this, v)
             置高度(this, v)
             self._ref = true
+            return this
         end
+
+        local 置精灵 = 列项.置精灵
+        列项.置精灵 = function(this, v)
+            置精灵(this, v)
+            if v then
+                列项:置高度(v.高度)
+            end
+            return this
+        end
+
         table.insert(self.子控件, i, 列项)
         self._ref = true
         return 列项

@@ -1,7 +1,7 @@
 -- @Author: GGELUA
 -- @Date:   2021-09-17 08:26:43
 -- @Last Modified by    : baidwwy
--- @Last Modified time  : 2022-03-24 16:00:30
+-- @Last Modified time  : 2022-03-28 20:19:51
 
 local SDL = require 'SDL'
 
@@ -56,13 +56,14 @@ local _obj = function(t, x, o)
 end
 --==============================================================================
 local _colors = {
-    --RGBWYK
+    --RGBWYKC
     [0x52] = 0xFF0000,
     [0x47] = 0x00FF00,
     [0x42] = 0x0000FF,
     [0x57] = 0xFFFFFF,
     [0x59] = 0xFFFF00,
-    [0x4B] = 0x000000
+    [0x4B] = 0x000000,
+    [0x43] = 0x00FFFF
 }
 
 local function _insert(t) --比table.insert 快
