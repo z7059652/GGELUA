@@ -1,7 +1,7 @@
 -- @Author: baidwwy
 -- @Date:   2021-07-10 16:32:33
 -- @Last Modified by    : baidwwy
--- @Last Modified time  : 2022-03-28 20:29:08
+-- @Last Modified time  : 2022-03-29 06:44:39
 
 local SDL = require 'SDL'
 
@@ -481,7 +481,7 @@ do
 
         self.px = x or 0
         self.py = y or 0
-        self:置精灵(f.文字:取精灵(t))
+        self:置精灵(f:取文字():取精灵(t))
     end
 
     function _节点:添加(name, x, y)

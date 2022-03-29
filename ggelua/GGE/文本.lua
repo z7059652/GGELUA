@@ -1,7 +1,7 @@
 -- @Author: GGELUA
 -- @Date:   2021-09-17 08:26:43
 -- @Last Modified by    : baidwwy
--- @Last Modified time  : 2022-03-28 20:19:51
+-- @Last Modified time  : 2022-03-29 13:12:10
 
 local SDL = require 'SDL'
 
@@ -115,7 +115,7 @@ local function _Parser(str) --解析结构
                 end
             elseif _colors[code] then --RGBWYK颜色
                 style_c = _colors[code]
-            elseif code == 0x6D then --#m(XXXX)XXXX#m 回调
+            elseif code == 0x6D then --#m(aaa)bbb#m 回调
                 if style_m then
                     local m, s = string.match(u8char(unpack(codes)), '%((.+)%)(.*)')
                     indata {c = style_c, b = style_b, u = style_u, F = style_F, m = m, s = s}
@@ -123,6 +123,16 @@ local function _Parser(str) --解析结构
                     incode = _insert(codes)
                 end
                 style_m = not style_m
+            elseif code == 0x5B then --#[aaa$bbb#] 回调
+                style_m = true
+            elseif code == 0x5D then --#[aaa$bbb#] 回调
+                if style_m then
+                    local m, s = string.match(u8char(unpack(codes)), '(.+)$(.*)')
+                    indata {c = style_c, b = style_b, u = style_u, F = style_F, m = m, s = s}
+                    codes = {}
+                    incode = _insert(codes)
+                    style_m = false
+                end
             elseif code == 0x6E then --#n 结束
                 style_c = nil
             elseif code == 0x75 then --#uXXXX#u 下划线

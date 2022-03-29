@@ -1,7 +1,7 @@
 -- @Author: baidwwy
 -- @Date:   2021-07-10 16:32:33
 -- @Last Modified by    : baidwwy
--- @Last Modified time  : 2022-03-24 15:44:41
+-- @Last Modified time  : 2022-03-29 12:54:18
 
 local SDL = require 'SDL'
 local GUI控件 = require('GUI.控件')
@@ -65,6 +65,12 @@ function GUI文本:绑定滑块(obj)
         end
     end
     return obj
+end
+
+function GUI文本:创建滑块(name, x, y, w, h)
+    local 滑块 = self.父控件:创建滑块(name, x, y, w, h)
+    self:绑定滑块(滑块)
+    return 滑块
 end
 
 function GUI文本:_消息事件(msg)
