@@ -1,7 +1,7 @@
 -- @Author              : GGELUA
 -- @Date                : 2022-03-22 21:22:22
 -- @Last Modified by    : baidwwy
--- @Last Modified time  : 2022-03-28 15:00:31
+-- @Last Modified time  : 2022-03-29 22:15:21
 
 local SDL = require('SDL')
 local assert = assert
@@ -171,6 +171,7 @@ function SDL精灵:置缩放(x, y, v)
     self:置过滤(v)
     return self
 end
+SDL精灵.置拉伸 = SDL精灵.置缩放
 
 function SDL精灵:置左右翻转(v)
     local flip = self._f or 0

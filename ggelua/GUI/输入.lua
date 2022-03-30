@@ -11,7 +11,7 @@ local 输入光标 = class('GUI输入光标', SDL精灵)
 do
     function 输入光标:初始化(对象)
         SDL精灵.SDL精灵(self, 0, 0, 0, 1, 15)
-        self:置颜色(0, 0, 0, 255)
+        self:置颜色(255, 255, 255, 255)
         self.对象 = 对象
         self.计时 = 0
         self.间隔 = 0.5
@@ -82,7 +82,7 @@ GUI输入.多行模式 = 512
 
 function GUI输入:初始化()
     self._root = self:取根控件()
-    self._文字 = self._root._文字:复制():置颜色(0, 0, 0, 255)
+    self._文字 = self._root._文字:复制():置颜色(255, 255, 255, 255)
 
     self._光标 = 输入光标(self)
 

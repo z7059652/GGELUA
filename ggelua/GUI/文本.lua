@@ -1,7 +1,7 @@
 -- @Author: baidwwy
 -- @Date:   2021-07-10 16:32:33
 -- @Last Modified by    : baidwwy
--- @Last Modified time  : 2022-03-29 12:54:18
+-- @Last Modified time  : 2022-03-30 06:34:59
 
 local SDL = require 'SDL'
 local GUI控件 = require('GUI.控件')
@@ -23,12 +23,11 @@ function GUI文本:_更新(...)
 end
 
 function GUI文本:_显示(...)
-    GUI控件._显示(self, ...)
     local _x, _y = self:取坐标()
     self._win:置区域(_x, _y, self.宽度, self.高度)
     GGE文本.显示(self, _x, _y + self._py)
     self._win:置区域()
-    --self.矩形:显示()
+    GUI控件._显示(self, ...)
 end
 
 function GUI文本:置文本(...)

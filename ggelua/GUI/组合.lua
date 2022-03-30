@@ -1,7 +1,7 @@
 -- @Author: baidwwy
 -- @Date:   2021-08-18 13:24:54
--- @Last Modified by: baidwwy
--- @Last Modified time: 2021-12-17 02:42:07
+-- @Last Modified by    : baidwwy
+-- @Last Modified time  : 2022-03-30 12:59:53
 
 local GUI列表 = require('GUI.列表')
 local GUI控件 = require('GUI.控件')
@@ -11,10 +11,10 @@ function GUI组合:初始化(_, x, y, w, h)
     self:创建文本(0, 0, w, h)
 
     self.文字 = self:取根控件()._文字:复制()
-    self.文字:置颜色(0, 0, 0, 255)
+    self.文字:置颜色(255, 255, 255, 255)
 end
 
-function GUI组合:检查点()--子控件在组合之外，虽然父检查通过
+function GUI组合:检查点() --子控件在组合之外，虽然父检查通过
     return true
 end
 
@@ -72,23 +72,32 @@ end
 function GUI组合:创建按钮(x, y)
     local 按钮 = GUI控件.创建按钮(self, '按钮', x, y)
     function 按钮.左键弹起()
-        if self.列表控件 then
-            self.列表控件:置可见(true)
+        if self.弹出 then
+            self.弹出:置可见(true)
         end
     end
     return 按钮
 end
 
+function GUI组合:创建弹出(x, y, w, h)
+    self.弹出 = GUI控件.创建弹出控件(self, '弹出', x, y, w, h)
+    return self.弹出
+end
+
 function GUI组合:创建列表(x, y, w, h)
-    local 控件 = GUI控件.创建弹出控件(self, '控件', x, y, w, h)
-    local 列表 = 控件:创建列表('列表', 0, 0, w, h)
+    local 列表
+    if self.弹出 then
+        列表 = self.弹出:创建列表('列表', x, y, w, h)
+    else
+        self.弹出 = GUI控件.创建弹出控件(self, '弹出', x, y, w, h)
+        列表 = self.弹出:创建列表('列表', 0, 0, w, h)
+    end
 
     function 列表.左键弹起()
         self:置文本(列表:取文本(列表.选中行))
-        控件:置可见(false)
+        self.弹出:置可见(false)
     end
     self.列表 = 列表
-    self.列表控件 = 控件
     return 列表
 end
 

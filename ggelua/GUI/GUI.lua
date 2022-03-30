@@ -1,7 +1,7 @@
 -- @Author: baidwwy
 -- @Date:   2021-07-10 16:32:33
 -- @Last Modified by    : baidwwy
--- @Last Modified time  : 2022-03-21 14:17:48
+-- @Last Modified time  : 2022-03-30 09:35:57
 
 local SDL = require 'SDL'
 local GUI = class('GUI')
@@ -19,7 +19,7 @@ require 'GUI.进度'
 require 'GUI.组合'
 
 function GUI:初始化(窗口, 文字)
-    self._文字 = 文字
+    self._文字 = 文字:置颜色(255, 255, 255, 255)
     self._win = 窗口
     self._界面 = {}
     self._root = self
