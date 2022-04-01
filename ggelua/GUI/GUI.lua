@@ -1,7 +1,7 @@
 -- @Author: baidwwy
 -- @Date:   2021-07-10 16:32:33
 -- @Last Modified by    : baidwwy
--- @Last Modified time  : 2022-03-30 09:35:57
+-- @Last Modified time  : 2022-04-01 00:22:04
 
 local SDL = require 'SDL'
 local GUI = class('GUI')
@@ -18,17 +18,8 @@ require 'GUI.滑块'
 require 'GUI.进度'
 require 'GUI.组合'
 
-function GUI:初始化(窗口, 文字)
-    self._文字 = 文字:置颜色(255, 255, 255, 255)
-    self._win = 窗口
-    self._界面 = {}
-    self._root = self
-    self._popup = {}
-    self._tip = {}
-    self._modal = {}
-    self._msg = {}
-
-    self._win:注册事件(
+local function _注册事件(self, 窗口)
+    窗口:注册事件(
         self,
         {
             -- 更新事件 = function(_, dt, x, y)
@@ -69,6 +60,20 @@ function GUI:初始化(窗口, 文字)
             -- end
         }
     )
+end
+
+function GUI:初始化(窗口, 文字)
+    self._文字 = 文字:置颜色(255, 255, 255, 255)
+    self._win = 窗口
+    self._界面 = {}
+    self._root = self
+    self._popup = {}
+    self._tip = {}
+    self._modal = {}
+    self._msg = {}
+    if 窗口 then
+        _注册事件(self, 窗口)
+    end
 end
 
 function GUI:更新(dt, x, y)
@@ -209,9 +214,9 @@ function GUI:创建鼠标(名称)
     return self._鼠标
 end
 
-function GUI:创建界面(名称)
+function GUI:创建界面(名称, x, y, w, h)
     assert(not self[名称], 名称 .. '：已存在')
-    self[名称] = GUI控件(名称, 0, 0, self._win.宽度, self._win.高度, self)
+    self[名称] = GUI控件(名称, x or 0, y or 0, w or self._win.宽度, h or self._win.高度, self)
     table.insert(self._界面, self[名称])
     return self[名称]
 end
@@ -281,4 +286,12 @@ function GUI:取默认输入()
     return self._defipt
 end
 
+function GUI:置渲染窗口(v)
+    self._win = v
+end
+
+function GUI:置事件窗口(v)
+    self._win:取消注册事件(self)
+    _注册事件(self, v)
+end
 return GUI

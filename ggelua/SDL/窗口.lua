@@ -1,7 +1,7 @@
 -- @Author              : GGELUA
 -- @Date                : 2022-03-21 14:01:02
 -- @Last Modified by    : baidwwy
--- @Last Modified time  : 2022-03-28 02:37:15
+-- @Last Modified time  : 2022-04-01 02:00:06
 
 local SDL = require('SDL')
 local gge = require('ggelua')
@@ -36,7 +36,9 @@ function SDL窗口:SDL窗口(t)
     self.y = 0
 
     local flags = 0x00000004 --SDL_WINDOW_SHOWN
-    SDL.SetHint('SDL_RENDER_BATCHING', '1')
+    SDL.SetHint('SDL_RENDER_BATCHING', '1') --批渲染
+    SDL.SetHint('SDL_MOUSE_FOCUS_CLICKTHROUGH', '1') --非焦点触发鼠标
+
     if gge.platform == 'Android' or gge.platform == 'iOS' then
         self.是否全屏 = t.全屏 ~= false
         t.渲染器 = 'opengles2'
@@ -301,6 +303,10 @@ function SDL窗口:注册事件(k, t)
         self._reg[k] = t
         return k, t
     end
+end
+
+function SDL窗口:取消注册事件(k)
+    self._reg[k] = nil
 end
 --SDL.AddTimer是线程回调
 function SDL窗口:定时(ms, fun)

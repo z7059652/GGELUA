@@ -1,10 +1,27 @@
 -- @Author: baidwwy
 -- @Date:   2021-08-18 13:24:54
--- @Last Modified by: baidwwy
--- @Last Modified time: 2021-12-17 00:44:39
+-- @Last Modified by    : baidwwy
+-- @Last Modified time  : 2022-04-01 17:01:56
 
 local SDL = require 'SDL'
 local GUI控件 = require('GUI.控件')
+
+local _计算位置 = function(self, _x, _y)
+    local x, y, pos = self._rect:取坐标()
+
+    if self.宽度 > self.高度 then --横向
+        local w = self._rect.宽度 - self._btn2.宽度
+        pos = math.floor((_x - x - self._bx) / w * self.最大值)
+    else
+        local h = self._rect.高度 - self._btn2.高度
+        pos = math.floor((_y - y - self._by) / h * self.最大值)
+    end
+
+    if pos ~= self.位置 then
+        self:置位置(pos)
+        return true
+    end
+end
 
 local GUI滑块 = class('GUI滑块', GUI控件)
 
@@ -18,6 +35,14 @@ function GUI滑块:创建滑块按钮(name, x, y, w, h)
     self._rect = self:创建控件('_rect', x, y, w or self.宽度, h or self.高度) --按钮的区域
     self._btn2 = self._rect:创建按钮('_btn2')
     self[name] = self._btn2
+    self._btn2.左键按住 = function(_, x1, y1, x2, y2)
+        local 位置 = self.位置
+        if _计算位置(self, x2, y2) then
+            if 位置 ~= self.位置 then
+                self:发送消息('滚动事件', x1, y1, self.位置, msg)
+            end
+        end
+    end
     return self._btn2
 end
 
@@ -52,23 +77,6 @@ function GUI滑块:置位置(v)
     end
 
     return self
-end
-
-local _计算位置 = function(self, _x, _y)
-    local x, y, pos = self._rect:取坐标()
-
-    if self.宽度 > self.高度 then --横向
-        local w = self._rect.宽度 - self._btn2.宽度
-        pos = math.floor((_x - x - self._bx) / w * self.最大值)
-    else
-        local h = self._rect.高度 - self._btn2.高度
-        pos = math.floor((_y - y - self._by) / h * self.最大值)
-    end
-
-    if pos ~= self.位置 then
-        self:置位置(pos)
-        return true
-    end
 end
 
 function GUI滑块:_消息事件(msg)
@@ -109,11 +117,6 @@ function GUI滑块:_消息事件(msg)
                     local x, y = self._btn2:取坐标()
                     self:发送消息('滚动事件', x, y, self.位置, msg)
                 end
-            end
-        elseif v.type == SDL.MOUSE_MOTION and v.state == SDL.BUTTON_LMASK and self._btn2:取状态() == '按下' then --拖动
-            if _计算位置(self, v.x, v.y) then
-                local x, y = self._btn2:取坐标()
-                self:发送消息('滚动事件', x, y, self.位置, msg)
             end
         end
     end

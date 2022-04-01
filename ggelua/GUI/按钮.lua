@@ -1,7 +1,7 @@
 -- @Author: baidwwy
 -- @Date:   2021-08-14 12:39:47
 -- @Last Modified by    : baidwwy
--- @Last Modified time  : 2022-03-28 14:39:55
+-- @Last Modified time  : 2022-04-01 17:04:18
 
 local SDL = require 'SDL'
 local GUI控件 = require('GUI.控件')
@@ -149,7 +149,6 @@ do
                     if self:检查透明(v.x, v.y) then
                         v.typed, v.type = v.type, nil
                         v.control = self
-
                         if not self.是否禁止 then
                             self._btn = 2
                             msg.按钮按下 = self
@@ -188,22 +187,33 @@ do
                     end
                 end
             elseif v.type == SDL.MOUSE_MOTION then
-                if gge.platform == 'Windows' and v.state == 0 then
-                    if self:检查透明(v.x, v.y) then
-                        self.鼠标焦点 = true
-                        local x, y = self:取坐标()
-                        self:发送消息('获得鼠标', x, y, msg)
-                        v.x = -9999
-                        v.y = -9999
-                        if not self.是否禁止 and self._rbtn == 1 then
-                            self._btn = 3
-                            msg.按钮经过 = self
+                if gge.platform == 'Windows' then
+                    if v.state == 0 then
+                        if self:检查透明(v.x, v.y) then
+                            self.鼠标焦点 = true
+                            local x, y = self:取坐标()
+                            self:发送消息('获得鼠标', x, y, v.x, v.y, msg)
+                            v.x = -9999
+                            v.y = -9999
+                            if not self.是否禁止 and self._rbtn == 1 then
+                                self._btn = 3
+                                msg.按钮经过 = self
+                            end
+                        elseif self._rbtn == 3 then
+                            self._btn = 1
+                            msg.按钮经过 = false
+                            self:发送消息('失去鼠标', v.x, v.y, v.x, v.y, msg)
+                            self.鼠标焦点 = false
                         end
-                    elseif self._rbtn == 3 then
-                        self._btn = 1
-                        msg.按钮经过 = false
-                        self:发送消息('失去鼠标', v.x, v.y, msg)
-                        self.鼠标焦点 = false
+                    elseif self._rbtn == 2 then
+                        v.typed, v.type = v.type, nil
+                        if v.state & SDL.BUTTON_LMASK == SDL.BUTTON_LMASK then
+                            local x, y = self:取坐标()
+                            self:发送消息('左键按住', x, y, v.x, v.y, msg)
+                        elseif v.state & SDL.BUTTON_LMASK == SDL.BUTTON_RMASK then
+                            local x, y = self:取坐标()
+                            self:发送消息('右键按住', x, y, v.x, v.y, msg)
+                        end
                     end
                 end
             end

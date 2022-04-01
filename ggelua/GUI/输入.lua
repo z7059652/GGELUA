@@ -1,7 +1,7 @@
 -- @Author: baidwwy
 -- @Date:   2021-07-10 16:32:33
 -- @Last Modified by    : baidwwy
--- @Last Modified time  : 2022-03-28 06:42:48
+-- @Last Modified time  : 2022-03-31 14:21:24
 
 local gge = require('ggelua')
 local SDL = require 'SDL'
@@ -283,7 +283,7 @@ local function _检查输入内容(self, c, v)
         return self._模式 & self.小数模式 == self.小数模式
     elseif c == b '-' then --负号
         return self._模式 & self.负数模式 == self.负数模式
-    elseif #v == 1 then
+    elseif #v < 3 then
         return self._模式 & self.符号模式 == self.符号模式
     elseif #v >= 3 then
         return self._模式 & self.中文模式 == self.中文模式

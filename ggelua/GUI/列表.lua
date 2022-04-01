@@ -1,7 +1,7 @@
 -- @Author: baidwwy
 -- @Date:   2021-07-10 16:32:33
 -- @Last Modified by    : baidwwy
--- @Last Modified time  : 2022-03-29 06:44:39
+-- @Last Modified time  : 2022-04-01 17:21:11
 
 local SDL = require 'SDL'
 
@@ -412,13 +412,15 @@ do
                 end
             elseif v.type == SDL.MOUSE_MOTION then
                 if self:检查点(v.x, v.y) then
-                    v.typed, v.type = v.type, nil
-                    v.control = self
+                    if v.state == 0 then
+                        v.typed, v.type = v.type, nil
+                        v.control = self
 
-                    local i, item = _刷新焦点(self, v.x, v.y)
-                    if item then
-                        local x, y = item:取坐标()
-                        self:发送消息('获得鼠标', x, y, i, item, msg)
+                        local i, item = _刷新焦点(self, v.x, v.y)
+                        if item then
+                            local x, y = item:取坐标()
+                            self:发送消息('获得鼠标', x, y, i, item, msg)
+                        end
                     end
                 else
                     self.焦点行 = 0
