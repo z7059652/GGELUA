@@ -1,7 +1,7 @@
 -- @Author: GGELUA
 -- @Date:   2021-09-01 21:04:09
 -- @Last Modified by    : baidwwy
--- @Last Modified time  : 2022-03-25 21:29:59
+-- @Last Modified time  : 2022-04-02 18:15:00
 
 local gge = gge
 local _ENV = setmetatable({}, {__index = _G})
@@ -132,8 +132,11 @@ function 去除扩展名(str)
 end
 
 function 取文件名(str, ex)
-    local r = string.match(str:gsub('/', '\\'), '.+\\([^/]*%.%w+)$')
-    return ex and 去除扩展名(r) or r
+    str = str:gsub('/', '\\')
+    if str:find('\\') then
+        str = str:match('.+\\([^/]*%.%w+)$')
+    end
+    return ex and 去除扩展名(str) or str
 end
 getfilename = 取文件名
 
