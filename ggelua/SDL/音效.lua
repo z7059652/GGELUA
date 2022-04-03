@@ -1,7 +1,7 @@
 -- @Author              : GGELUA
 -- @Date                : 2022-03-07 18:52:00
 -- @Last Modified by    : baidwwy
--- @Last Modified time  : 2022-03-28 02:17:06
+-- @Last Modified time  : 2022-04-03 02:01:03
 
 local SDL = require('SDL')
 local ggetype = ggetype
@@ -45,6 +45,7 @@ end
 function SDL音效:停止()
     if self._id then
         MIX.HaltChannel(self._id)
+        self._id = nil
     end
     return self
 end
