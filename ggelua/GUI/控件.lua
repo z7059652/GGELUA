@@ -1,7 +1,7 @@
 -- @Author: baidwwy
 -- @Date:   2021-08-03 06:12:47
 -- @Last Modified by    : baidwwy
--- @Last Modified time  : 2022-03-25 23:53:29
+-- @Last Modified time  : 2022-04-03 11:41:21
 
 local SDL = require 'SDL'
 
@@ -344,9 +344,6 @@ function GUI控件:检查透明(x, y)
 end
 
 function GUI控件:置可见(val, sub)
-    if val and self.是否实例 and self.是否禁止 then
-        return self
-    end
     if self._lock then
         self.是否可见 = val == true
         return self

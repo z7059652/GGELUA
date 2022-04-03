@@ -1,7 +1,7 @@
 -- @Author: baidwwy
 -- @Date:   2021-08-14 12:39:47
 -- @Last Modified by    : baidwwy
--- @Last Modified time  : 2022-04-01 17:04:18
+-- @Last Modified time  : 2022-04-03 11:48:10
 
 local SDL = require 'SDL'
 local GUI控件 = require('GUI.控件')
@@ -101,8 +101,9 @@ do
 
     function GUI按钮:置可见(v, s)
         GUI控件.置可见(self, v, s)
+
         if gge.platform == 'Windows' and v and not self.是否禁止 and self._win:取鼠标焦点() then
-            local _, x, y = self._win:取鼠标状态()
+            local x, y = self._win:取鼠标坐标()
             if self:检查透明(x, y) then
                 self._btn = 3
             else
