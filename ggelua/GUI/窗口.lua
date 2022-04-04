@@ -1,7 +1,7 @@
 -- @Author: baidwwy
 -- @Date:   2021-07-10 16:32:33
 -- @Last Modified by    : baidwwy
--- @Last Modified time  : 2022-03-28 14:44:30
+-- @Last Modified time  : 2022-04-04 04:37:28
 
 local SDL = require 'SDL'
 local GUI控件 = require('GUI.控件')
@@ -16,8 +16,6 @@ local function _sort(self)
     self._ID = lid
     if self.父控件.子控件 then
         table.sort(self.父控件.子控件, _comp)
-    else
-        warn(self.名称)
     end
 end
 
@@ -26,8 +24,6 @@ local GUI窗口 = class('GUI窗口', GUI控件)
 do
     function GUI窗口:初始化()
         self._ID = 0
-
-        --负坐标
         self:置中心(self.x, self.y)
         self:置坐标(0, 0)
     end

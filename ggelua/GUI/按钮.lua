@@ -1,7 +1,7 @@
 -- @Author: baidwwy
 -- @Date:   2021-08-14 12:39:47
 -- @Last Modified by    : baidwwy
--- @Last Modified time  : 2022-04-03 11:48:10
+-- @Last Modified time  : 2022-04-03 14:50:14
 
 local SDL = require 'SDL'
 local GUI控件 = require('GUI.控件')
@@ -152,7 +152,6 @@ do
                         v.control = self
                         if not self.是否禁止 then
                             self._btn = 2
-                            msg.按钮按下 = self
                             local x, y = self:取坐标()
                             if v.button == SDL.BUTTON_LEFT then
                                 self:发送消息('左键按下', x, y, msg)
@@ -180,8 +179,6 @@ do
                                     self:发送消息('右键弹起', x, y, msg)
                                 end
                             end
-                        else
-                            msg.鼠标弹起 = self --没有按下
                         end
                     elseif self._rbtn == 2 then
                         self._btn = 1
@@ -198,11 +195,10 @@ do
                             v.y = -9999
                             if not self.是否禁止 and self._rbtn == 1 then
                                 self._btn = 3
-                                msg.按钮经过 = self
                             end
                         elseif self._rbtn == 3 then
                             self._btn = 1
-                            msg.按钮经过 = false
+
                             self:发送消息('失去鼠标', v.x, v.y, v.x, v.y, msg)
                             self.鼠标焦点 = false
                         end
@@ -339,7 +335,6 @@ do
     function GUI多选按钮:_消息事件(msg)
         GUI按钮._消息事件(self, msg)
         if msg.按钮弹起 == self then
-            msg.按钮选中 = self
             self:置选中(not self.是否选中)
         end
     end

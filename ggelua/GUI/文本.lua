@@ -1,13 +1,13 @@
 -- @Author: baidwwy
 -- @Date:   2021-07-10 16:32:33
 -- @Last Modified by    : baidwwy
--- @Last Modified time  : 2022-03-30 06:34:59
+-- @Last Modified time  : 2022-04-03 21:31:39
 
 local SDL = require 'SDL'
 local GUI控件 = require('GUI.控件')
 local GGE文本 = require('GGE.文本')
 
-local GUI文本 = class('GUI文本', GUI控件, GGE文本)
+local GUI文本 = class('GUI文本', GGE文本, GUI控件)
 
 function GUI文本:初始化()
     self._py = 0
