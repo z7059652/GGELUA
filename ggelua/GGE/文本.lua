@@ -1,7 +1,7 @@
 -- @Author: GGELUA
 -- @Date:   2021-09-17 08:26:43
 -- @Last Modified by    : baidwwy
--- @Last Modified time  : 2022-03-29 13:12:10
+-- @Last Modified time  : 2022-04-04 04:03:24
 
 local SDL = require 'SDL'
 
@@ -198,7 +198,7 @@ local function _Adjust(self)
 
     local ret = {}
     local x = 0
-    line = {w = 0, h = fh}
+    local line = {w = 0, h = fh}
 
     for _, v in ipairs(self._解析后) do
         if type(v.s) == 'string' then --文本
