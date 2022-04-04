@@ -1,7 +1,7 @@
--- @Author       : GGELUA
--- @Date         : 2021-10-30 13:05:32
+-- @Author              : GGELUA
+-- @Date                : 2022-03-07 18:52:00
 -- @Last Modified by    : baidwwy
--- @Last Modified time  : 2022-02-06 14:19:33
+-- @Last Modified time  : 2022-04-04 20:09:24
 
 class = require('GGE.class')
 warn('@on') --开启警告
@@ -143,7 +143,7 @@ if gge.getplatform() == 'Android' then
             arg[i] = tostring(select(i, ...))
         end
         --log是变长va_list所以要转换%
-        gge.log(table.concat(arg, ' '):gsub('%%','%%%%'))
+        gge.log(table.concat(arg, ' '):gsub('%%', '%%%%'))
     end
     warn = function(...)
         local arg = {}
@@ -156,16 +156,20 @@ if gge.getplatform() == 'Android' then
     os.clock = gge.getticks
 end
 
-if gge.entry == 'main' then
+if gge.isdebug and gge.entry == 'main' then
     print('--------------------------------------------------------------------------------------------------------------------')
 
     print(string.format('GGE %s  %s  %s', gge.version, gge.getluaversion(), gge.getsdlversion()))
     print(string.format('平台:%s  调试:%s  控制台:%s', gge.getplatform(), gge.isdebug, gge.isconsole))
     print('--------------------------------------------------------------------------------------------------------------------')
--- print("引擎目录:"..gge.getrunpath())
--- print("项目目录:"..gge.getcurpath())
--- print('--------------------------------------------------------------------------------------------------------------------')
--- print('package.path',string.format('"%s"', package.path))
--- print('package.cpath',string.format('"%s"', package.cpath))
--- print('--------------------------------------------------------------------------------------------------------------------')
+    -- print("引擎目录:"..gge.getrunpath())
+    -- print("项目目录:"..gge.getcurpath())
+    -- print('--------------------------------------------------------------------------------------------------------------------')
+    -- print('package.path',string.format('"%s"', package.path))
+    -- print('package.cpath',string.format('"%s"', package.cpath))
+    -- print('--------------------------------------------------------------------------------------------------------------------')
+    if os.getenv('LOCAL_LUA_DEBUGGER_VSCODE') == '1' then
+        package.loaded['lldebugger'] = assert(loadfile(os.getenv('LOCAL_LUA_DEBUGGER_FILEPATH')))()
+        require('lldebugger').start()
+    end
 end
