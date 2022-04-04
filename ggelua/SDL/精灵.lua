@@ -1,7 +1,7 @@
 -- @Author              : GGELUA
 -- @Date                : 2022-03-22 21:22:22
 -- @Last Modified by    : baidwwy
--- @Last Modified time  : 2022-03-29 22:15:21
+-- @Last Modified time  : 2022-04-04 06:52:02
 
 local SDL = require('SDL')
 local assert = assert
@@ -10,7 +10,7 @@ SDL.IMG_Init()
 
 local SDL精灵 = class 'SDL精灵'
 
-local function _载入纹理(rd, p)
+local function _LoadTexture(rd, p)
     if not rd or p == 0 or not p then
         return
     end
@@ -36,17 +36,12 @@ function SDL精灵:SDL精灵(p, x, y, w, h)
     self._y = 0
     self.宽度 = 0
     self.高度 = 0
-    self._tex = p and _载入纹理(self._win:取渲染器(), p)
+    local tex = p and _LoadTexture(self._win:取渲染器(), p)
 
-    if self._tex then
-        self._win._texs[self] = self._tex --FIXME　重复
+    if tex then
+        self:置纹理(tex)
         if w then
             self:置区域(x, y, w, h)
-        else
-            local _, _, w, h = self._tex:QueryTexture()
-            self.宽度 = w
-            self.高度 = h
-            self._dr:SetRectWH(w, h)
         end
     elseif x and y and w and h then
         self:置区域(x, y, w, h)
@@ -124,6 +119,7 @@ function SDL精灵:置纹理(tex)
         self._tex = tex:取对象()
     end
     if self._tex then
+        self._win._texs[self] = self._tex
         local _, _, w, h = self._tex:QueryTexture()
         self.宽度, self.高度 = w, h
         self._dr:SetRectWH(w, h)

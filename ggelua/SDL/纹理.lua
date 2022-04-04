@@ -1,14 +1,14 @@
 -- @Author              : GGELUA
 -- @Date                : 2022-03-07 18:52:00
 -- @Last Modified by    : baidwwy
--- @Last Modified time  : 2022-03-28 02:27:49
+-- @Last Modified time  : 2022-04-04 06:55:54
 
 local SDL = require('SDL')
 local IMG = SDL.IMG_Init()
 
 local SDL纹理 = class 'SDL纹理'
 
-local function _载入纹理(rd, a, b, c, d, e)
+local function _LoadTexture(rd, a, b, c, d, e)
     if not rd then
         return
     end
@@ -36,7 +36,7 @@ end
 function SDL纹理:SDL纹理(...)
     assert(SDL._mth == SDL.ThreadID(), '无法在线程中调用')
     self._win = SDL._win --默认窗口
-    self._tex = _载入纹理(self._win:取渲染器(), ...)
+    self._tex = _LoadTexture(self._win:取渲染器(), ...)
 
     if ggetype(self._tex) == 'SDL_Texture' then
         self._win._texs[self] = self._tex
