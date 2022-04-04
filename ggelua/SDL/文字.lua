@@ -1,7 +1,7 @@
 -- @Author              : GGELUA
 -- @Date                : 2022-03-07 18:52:00
 -- @Last Modified by    : baidwwy
--- @Last Modified time  : 2022-03-28 19:38:33
+-- @Last Modified time  : 2022-04-04 18:09:37
 
 local gge = require('ggelua')
 local SDL = require('SDL')
@@ -25,6 +25,7 @@ function SDL文字:SDL文字(file, size, aliasing, w)
     self._ref = 1
     self._style = 0
     local tp = ggetype(file)
+
     if tp == 'string' then
         self._file = file
         if fcache[file] then
@@ -50,7 +51,6 @@ function SDL文字:SDL文字(file, size, aliasing, w)
 
     if self._font then
         SDL._ttfs[self] = self._font
-        self:置颜色(255, 255, 255)
     else
         error(SDL.GetError())
     end
@@ -230,7 +230,6 @@ function SDL文字:置颜色(r, g, b, a)
         self._g = g
         self._b = b
     end
-
     return self
 end
 
