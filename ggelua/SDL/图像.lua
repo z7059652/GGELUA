@@ -1,7 +1,7 @@
 -- @Author              : GGELUA
 -- @Date                : 2022-03-07 18:52:00
 -- @Last Modified by    : baidwwy
--- @Last Modified time  : 2022-03-28 02:22:03
+-- @Last Modified time  : 2022-04-04 06:42:10
 
 local SDL = require('SDL')
 local ggetype = ggetype
@@ -93,6 +93,10 @@ end
 function SDL图像:到灰度()
     self._sf:SurfaceToGrayscale()
     return self
+end
+
+function SDL图像:到纹理()
+    return require('SDL.纹理')(self._sf)
 end
 
 function SDL图像:到精灵()
