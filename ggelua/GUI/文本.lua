@@ -1,7 +1,7 @@
 -- @Author: baidwwy
 -- @Date:   2021-07-10 16:32:33
 -- @Last Modified by    : baidwwy
--- @Last Modified time  : 2022-04-03 21:31:39
+-- @Last Modified time  : 2022-04-05 07:36:40
 
 local SDL = require 'SDL'
 local GUI控件 = require('GUI.控件')
@@ -80,6 +80,7 @@ function GUI文本:_消息事件(msg)
     for _, v in ipairs(msg.鼠标) do
         if v.type == SDL.MOUSE_DOWN then
             if self:检查点(v.x, v.y) then
+                self._DOWN = {x = v.x, y = v.y, py = self._py}
                 local cb = self:检查回调(v.x, v.y)
                 if cb then
                     if v.button == SDL.BUTTON_LEFT then
@@ -100,6 +101,7 @@ function GUI文本:_消息事件(msg)
                 end
             end
         elseif v.type == SDL.MOUSE_UP then
+            self._DOWN = false
             if self:检查点(v.x, v.y) then
                 local cb = self:检查回调(v.x, v.y)
                 if cb then
@@ -121,23 +123,40 @@ function GUI文本:_消息事件(msg)
                 self._rcb = nil
             end
         elseif v.type == SDL.MOUSE_MOTION then
-            if self:检查点(v.x, v.y) and v.state == 0 then
-                local x, y = self:取坐标()
-                self:发送消息('获得鼠标', x, y, msg)
-                self._mf = true
-                local cb = self:检查回调(v.x, v.y)
-                if cb then
-                    v.typed, v.type = v.type, nil
-                    v.control = self
-                    self._focus = true
-                    self:发送消息('获得回调', v.x, v.y, cb, msg)
-                elseif self._focus then
-                    self._focus = nil
-                    self:发送消息('失去回调', v.x, v.y, msg)
+            if gge.platform == 'Windows' then
+                if self:检查点(v.x, v.y) and v.state == 0 then
+                    local x, y = self:取坐标()
+                    self:发送消息('获得鼠标', x, y, msg)
+                    self._mf = true
+                    local cb = self:检查回调(v.x, v.y)
+                    if cb then
+                        v.typed, v.type = v.type, nil
+                        v.control = self
+                        self._focus = true
+                        self:发送消息('获得回调', v.x, v.y, cb, msg)
+                    elseif self._focus then
+                        self._focus = nil
+                        self:发送消息('失去回调', v.x, v.y, msg)
+                    end
+                elseif self._mf then
+                    self._mf = nil
+                    self:发送消息('失去鼠标', v.x, v.y, msg)
                 end
-            elseif self._mf then
-                self._mf = nil
-                self:发送消息('失去鼠标', v.x, v.y, msg)
+            elseif self._DOWN and v.state & SDL.BUTTON_LMASK == SDL.BUTTON_LMASK then
+                local py = self._DOWN.py + (v.y - self._DOWN.y)
+                if py > 0 then
+                    py = 0
+                end
+                if math.abs(py) > self._max then
+                    py = -self._max
+                end
+                if self.滑块 then
+                    self.滑块:置位置(math.floor(math.abs(py) / self._max * self.滑块.最大值))
+                else
+                    self._py = math.floor(py)
+                end
+
+                self:发送消息('鼠标滚轮', py == -self._max)
             end
         elseif v.type == SDL.MOUSE_WHEEL then
             local x, y = SDL._wins[v.windowID]:取鼠标坐标()
