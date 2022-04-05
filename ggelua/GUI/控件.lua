@@ -1,7 +1,7 @@
--- @Author: baidwwy
--- @Date:   2021-08-03 06:12:47
+-- @Author              : GGELUA
+-- @Date                : 2022-04-03 14:00:28
 -- @Last Modified by    : baidwwy
--- @Last Modified time  : 2022-04-03 11:41:21
+-- @Last Modified time  : 2022-04-05 21:06:17
 
 local SDL = require 'SDL'
 
@@ -355,9 +355,7 @@ function GUI控件:置可见(val, sub)
     self.是否可见 = val == true
 
     if not self.是否实例 and val then
-        if rawget(self, '初始化') then
-            ggexpcall(self.初始化, self)
-        end
+        self:发送消息('初始化')
         self.是否实例 = true
     end
     if sub then
@@ -371,9 +369,7 @@ end
 
 function GUI控件:重新初始化(...)
     if self.是否实例 then
-        if rawget(self, '初始化') then
-            ggexpcall(self.初始化, self, ...)
-        end
+        self:发送消息('初始化')
     end
     for _, v in ipairs(self.子控件) do
         v:重新初始化(...)

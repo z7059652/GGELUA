@@ -1,7 +1,7 @@
--- @Author: baidwwy
--- @Date:   2021-07-10 16:32:33
+-- @Author              : GGELUA
+-- @Date                : 2022-03-07 18:52:00
 -- @Last Modified by    : baidwwy
--- @Last Modified time  : 2022-04-05 07:36:40
+-- @Last Modified time  : 2022-04-05 21:05:21
 
 local SDL = require 'SDL'
 local GUI控件 = require('GUI.控件')
@@ -146,8 +146,7 @@ function GUI文本:_消息事件(msg)
                 local py = self._DOWN.py + (v.y - self._DOWN.y)
                 if py > 0 then
                     py = 0
-                end
-                if math.abs(py) > self._max then
+                elseif math.abs(py) > self._max then
                     py = -self._max
                 end
                 if self.滑块 then
@@ -167,9 +166,7 @@ function GUI文本:_消息事件(msg)
 
                 if py > 0 then
                     py = 0
-                end
-
-                if math.abs(py) > self._max then
+                elseif math.abs(py) > self._max then
                     py = -self._max
                 end
 

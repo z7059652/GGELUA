@@ -1,7 +1,7 @@
--- @Author: baidwwy
--- @Date:   2021-07-10 16:32:33
+-- @Author              : GGELUA
+-- @Date                : 2022-03-07 18:52:00
 -- @Last Modified by    : baidwwy
--- @Last Modified time  : 2022-04-01 17:21:11
+-- @Last Modified time  : 2022-04-05 21:06:22
 
 local SDL = require 'SDL'
 
@@ -34,9 +34,15 @@ local function _刷新列表(self)
         v.行号 = i
         v:置坐标(v.px, hy + v.py)
         local yy = py + v.y
-        v.是否可见 = yy + v.高度 > 0 and yy < self.高度
+
         v:置中心(0, py)
-        hy = hy + v.高度 + self.行间距
+        if v.高度 then
+            v.是否可见 = yy + v.高度 > 0 and yy < self.高度
+            hy = hy + v.高度 + self.行间距
+        else
+            v.是否可见 = false
+            warn(self.名称, v.名称, '->没有高度')
+        end
     end
     hy = hy - self.行间距
     if hy > self.高度 then --可以滚动的最大值

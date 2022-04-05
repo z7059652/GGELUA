@@ -1,9 +1,8 @@
--- @Author: baidwwy
--- @Date:   2021-07-10 16:32:33
+-- @Author              : GGELUA
+-- @Date                : 2022-03-07 18:52:00
 -- @Last Modified by    : baidwwy
--- @Last Modified time  : 2022-03-31 14:21:24
+-- @Last Modified time  : 2022-04-05 21:06:26
 
-local gge = require('ggelua')
 local SDL = require 'SDL'
 --===================================================================
 local SDL精灵 = require('SDL.精灵')

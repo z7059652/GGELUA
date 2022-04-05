@@ -1,7 +1,7 @@
--- @Author       : GGELUA
--- @Date         : 2021-09-17 08:26:43
--- @Last Modified by    : GGELUA
--- @Last Modified time  : 2022-03-07 16:30:31
+-- @Author              : GGELUA
+-- @Date                : 2022-03-07 18:52:00
+-- @Last Modified by    : baidwwy
+-- @Last Modified time  : 2022-04-05 21:04:30
 
 require('ggelua') --preload dll
 io.stdout:setvbuf('no', 0)
@@ -218,7 +218,8 @@ package.loaded =
 )
 
 function gge.require(path, env, ...)
-    path = path:gsub('\\', '/'):lower()
+    path = 处理路径(path)
+    path = 搜索路径(path)
     local data = 读取文件(path)
     if data then
         return assert(load(data, path, 'bt', env))(...)
