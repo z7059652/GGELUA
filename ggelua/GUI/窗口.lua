@@ -1,7 +1,7 @@
 -- @Author              : GGELUA
 -- @Date                : 2022-03-07 18:52:00
 -- @Last Modified by    : baidwwy
--- @Last Modified time  : 2022-04-05 21:05:55
+-- @Last Modified time  : 2022-04-07 09:48:54
 
 local SDL = require 'SDL'
 local GUI控件 = require('GUI.控件')
@@ -33,7 +33,7 @@ do
         if v and self.父控件 then
             _sort(self)
         end
-        self:_子控件消息({父窗口可见 = self.是否可见})
+        self:_子控件消息 {界面 = {父窗口可见 = self.是否可见}}
         return self
     end
 

@@ -1,7 +1,7 @@
 -- @Author              : GGELUA
 -- @Date                : 2022-03-07 18:52:00
 -- @Last Modified by    : baidwwy
--- @Last Modified time  : 2022-04-05 21:06:22
+-- @Last Modified time  : 2022-04-07 10:41:10
 
 local SDL = require 'SDL'
 
@@ -149,6 +149,7 @@ do
                 self:子显示(x, y, this._i)
             end
         end
+
         local 置高度 = 列项.置高度
         列项.置高度 = function(this, v)
             置高度(this, v)
@@ -157,9 +158,9 @@ do
         end
 
         local 置精灵 = 列项.置精灵
-        列项.置精灵 = function(this, v)
+        列项.置精灵 = function(this, v, vh)
             置精灵(this, v)
-            if v then
+            if v and v.高度 and vh then
                 列项:置高度(v.高度)
             end
             return this

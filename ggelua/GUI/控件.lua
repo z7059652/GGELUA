@@ -1,7 +1,7 @@
 -- @Author              : GGELUA
 -- @Date                : 2022-04-03 14:00:28
 -- @Last Modified by    : baidwwy
--- @Last Modified time  : 2022-04-05 21:06:17
+-- @Last Modified time  : 2022-04-07 10:34:34
 
 local SDL = require 'SDL'
 
@@ -112,10 +112,29 @@ function GUI控件:_消息事件(msg)
         return
     end
 
+    if msg.界面 then
+        for k, v in pairs(msg.界面) do
+            if type(v) == 'table' then
+                self:发送消息(k, table.unpack(v))
+            else
+                self:发送消息(k, v)
+            end
+        end
+    end
+
     self:_子控件消息(msg)
 
     if msg.键盘 then
         for _, v in ipairs(msg.键盘) do
+            if v.type == 0x300 then --SDL_KEYDOWN
+                if v['repeat'] then
+                    self:发送消息('键盘按住', v.keysym.sym, v.keysym.mod)
+                else
+                    self:发送消息('键盘按下', v.keysym.sym, v.keysym.mod)
+                end
+            elseif v.type == 0x301 then --SDL_KEYUP
+                self:发送消息('键盘弹起', v.keysym.sym, v.keysym.mod)
+            end
             if self:发送消息('键盘事件', table.unpack(v)) then
                 v[2] = nil
             end
@@ -243,6 +262,7 @@ function GUI控件:置坐标(x, y) --坐标是相对于父的
     self.x = x or 0
     self.y = y or 0
     self.矩形:置坐标(self:取坐标())
+    self:_子控件消息 {界面 = {父坐标改变 = {self}}}
     return self
 end
 
@@ -287,6 +307,7 @@ function GUI控件:置宽高(w, h)
     self.宽度 = w
     self.高度 = h
     self.矩形:置宽高(w, h)
+    self:_子控件消息 {界面 = {父宽高改变 = {self}}}
     return self
 end
 
@@ -302,12 +323,14 @@ end
 function GUI控件:置宽度(w)
     self.宽度 = w
     self.矩形:置宽高(w, self.高度)
+    self:_子控件消息 {界面 = {父宽度改变 = {self}}}
     return self
 end
 
 function GUI控件:置高度(h)
     self.高度 = h
     self.矩形:置宽高(self.宽度, h)
+    self:_子控件消息 {界面 = {父高度改变 = {self}}}
     return self
 end
 

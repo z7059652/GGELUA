@@ -1,7 +1,7 @@
 -- @Author              : GGELUA
 -- @Date                : 2022-04-03 14:00:28
 -- @Last Modified by    : baidwwy
--- @Last Modified time  : 2022-04-05 21:05:39
+-- @Last Modified time  : 2022-04-07 00:22:57
 
 local SDL = require 'SDL'
 local GUI控件 = require('GUI.控件')
@@ -11,8 +11,6 @@ local GUI按钮 = class('GUI按钮', GUI控件)
 do
     function GUI按钮:初始化(_, x, y, w, h)
         self._rbtn = 1 --用来读
-        self.宽度 = w or 0
-        self.高度 = h or 0
         local spr = {}
         self._btnspr =
             setmetatable(

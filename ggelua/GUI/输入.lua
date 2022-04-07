@@ -1,7 +1,7 @@
 -- @Author              : GGELUA
 -- @Date                : 2022-03-07 18:52:00
 -- @Last Modified by    : baidwwy
--- @Last Modified time  : 2022-04-05 21:06:26
+-- @Last Modified time  : 2022-04-06 11:54:37
 
 local SDL = require 'SDL'
 --===================================================================
@@ -610,18 +610,33 @@ function GUI输入:_消息事件(msg)
     end
 
     for _, v in ipairs(msg.键盘) do
-        if self:发送消息('键盘事件', table.unpack(v)) then --键码（SDL.KEY_？）,功能键（SDL.KMOD_？）,状态（按下，弹起）,按住
-            v[1] = nil --清除键码
-            v.keysym.sym = nil
+        --键码（SDL.KEY_？）,功能键（SDL.KMOD_？）,状态（按下，弹起）,按住
+        if self:发送消息('键盘事件', table.unpack(v)) then
+            v.state = nil
+        end
+        do
+            local r
+            if v.type == 0x300 then --SDL_KEYDOWN
+                if v['repeat'] then
+                    r = self:发送消息('键盘按住', v.keysym.sym, v.keysym.mod)
+                else
+                    r = self:发送消息('键盘按下', v.keysym.sym, v.keysym.mod)
+                end
+            elseif v.type == 0x301 then --SDL_KEYUP
+                r = self:发送消息('键盘弹起', v.keysym.sym, v.keysym.mod)
+            end
+            if r then
+                v.state = nil
+            end
         end
         if not v.state and (v.keysym.sym == SDL.KEY_ENTER or v.keysym.sym == SDL.KEY_KP_ENTER) then --回车
-            v[1] = nil
+            v.state = nil
             if self._模式 & self.多行模式 == self.多行模式 then
                 self._光标.可见 = true
                 self:插入文本('\n')
             end
         end
-        if v.state then --按下
+        if v.state ~= nil then --按下
             if v.keysym.mod & SDL.KMOD_CTRL ~= 0 then
                 if v.keysym.sym == SDL.KEY_C then --复制
                     if self:是否选中() then
