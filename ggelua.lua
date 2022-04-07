@@ -1,61 +1,57 @@
 -- @Author              : GGELUA
 -- @Date                : 2022-03-07 18:52:00
 -- @Last Modified by    : baidwwy
--- @Last Modified time  : 2022-04-05 21:04:30
+-- @Last Modified time  : 2022-04-06 06:27:46
 
 require('ggelua') --preload dll
 io.stdout:setvbuf('no', 0)
 
 local entry = ...
-
-local function 分割路径(path)
-    local t, n = {}, 1
-    for match in path:gmatch('([^;]+)') do
-        t[n] = match
-        n = n + 1
-    end
-    return t
-end
-
-local lpath, lpath_, cpath
-if gge.platform == 'Windows' then
-    --lua脚本搜索
-    lpath = '!/ggelua/?.lua;!/ggelua/?/?.lua;ggelua/?.lua;ggelua/?/?.lua;?.lua;lua/?.lua;lua/?/?.lua'
-    lpath = lpath:gsub('!', gge.getrunpath())
-    lpath_ = 分割路径(lpath)
-    --lua模块搜索
-    cpath = '?.dll;lib/?.dll;!/?.dll;!/lib/?.dll'
-    cpath = cpath:gsub('!', gge.getrunpath())
-elseif gge.platform == 'Android' then
-    lpath = 'ggelua/?.lua;ggelua/?/?.lua;?.lua;lua/?.lua;lua/?/?.lua'
-    lpath_ = 分割路径(lpath)
-    cpath = gge.arg[1] .. '/lib?.so'
-end
-
-package.path = nil
-package.cpath = nil
-setmetatable(
-    package,
-    {
-        __newindex = function(t, k, v)
-            if v and k == 'path' then
-                lpath = v:lower():gsub('\\', '/')
-                lpath_ = 分割路径(lpath)
-            elseif k == 'cpath' then
-                cpath = v
-            else
-                rawset(t, k, v)
-            end
-        end,
-        __index = function(t, k)
-            if k == 'path' then
-                return lpath
-            elseif k == 'cpath' then
-                return cpath
-            end
+local lpath, cpath
+do
+    local function split(path)
+        local list, n = {}, 1
+        for match in path:gmatch('([^;]+)') do
+            list[n] = match
+            n = n + 1
         end
-    }
-)
+        return list
+    end
+
+    package.path = nil
+    package.cpath = nil
+    setmetatable(
+        package,
+        {
+            __newindex = function(t, k, v)
+                if v and k == 'path' then
+                    lpath = split(v:lower():gsub('\\', '/'))
+                elseif k == 'cpath' then
+                    cpath = v
+                else
+                    rawset(t, k, v)
+                end
+            end,
+            __index = function(t, k)
+                if k == 'path' then
+                    return table.concat(lpath, ';')
+                elseif k == 'cpath' then
+                    return cpath
+                end
+            end
+        }
+    )
+end
+
+if gge.platform == 'Windows' then
+    local path = '!/ggelua/?.lua;!/ggelua/?/?.lua;ggelua/?.lua;ggelua/?/?.lua;?.lua;lua/?.lua;lua/?/?.lua'
+    package.path = path:gsub('!', gge.getrunpath())
+    local cpath = '?.dll;lib/?.dll;!/?.dll;!/lib/?.dll'
+    package.cpath = cpath:gsub('!', gge.getrunpath())
+elseif gge.platform == 'Android' then
+    package.path = 'ggelua/?.lua;ggelua/?/?.lua;?.lua;lua/?.lua;lua/?/?.lua'
+    package.cpath = gge.arg[1] .. '/lib?.so'
+end
 
 -- if gge.platform=='Android' then
 --     error("找不到脚本")
@@ -160,7 +156,7 @@ else
 end
 
 local function 搜索路径(path)
-    for _, v in ipairs(lpath_) do
+    for _, v in ipairs(lpath) do
         local file = v:gsub('?', path)
         if 是否存在(file) then
             return file
@@ -168,64 +164,102 @@ local function 搜索路径(path)
     end
 end
 
-local loaded = package.loaded
-table.insert(
-    package.searchers,
-    2, --1是preload
-    function(path)
-        local npath = 处理路径(path)
-        if loaded[npath] ~= nil then
-            return function()
-                return loaded[npath]
-            end
-        end
-        local fpath = 搜索路径(npath)
-        if fpath then
-            return function()
-                local data = 读取文件(fpath)
-                local r, err = load(data, fpath)
-                if err then
-                    return error(err, 2)
+do
+    local loaded = package.loaded
+    table.insert(
+        package.searchers,
+        2, --1是preload
+        function(path)
+            local npath = 处理路径(path)
+            if loaded[npath] ~= nil then
+                return function()
+                    return loaded[npath]
                 end
-                local r = r()
-                loaded[npath] = r == nil and true or r
-                return loaded[npath]
+            end
+            local fpath = 搜索路径(npath)
+            if fpath then
+                return function()
+                    local data = 读取文件(fpath)
+                    local r, err = load(data, fpath)
+                    if err then
+                        return error(err, 2)
+                    end
+                    local r = r()
+                    loaded[npath] = r == nil and true or r
+                    return loaded[npath]
+                end
             end
         end
-    end
-)
+    )
 
-package.loaded =
-    setmetatable(
-    {},
-    {
-        __index = function(t, k)
-            if loaded[k] then
+    package.loaded =
+        setmetatable(
+        {},
+        {
+            __index = function(t, k)
+                if loaded[k] then
+                    return loaded[k]
+                end
+                k = 处理路径(k)
                 return loaded[k]
+            end,
+            __newindex = function(t, k, v)
+                loaded[k] = v
+                k = 处理路径(k)
+                loaded[k] = v
+            end,
+            __pairs = function()
+                return next, loaded
             end
-            k = 处理路径(k)
-            return loaded[k]
-        end,
-        __newindex = function(t, k, v)
-            loaded[k] = v
-            k = 处理路径(k)
-            loaded[k] = v
-        end,
-        __pairs = function()
-            return next, loaded
-        end
-    }
-)
+        }
+    )
+end
 
 function gge.require(path, env, ...)
     path = 处理路径(path)
     path = 搜索路径(path)
-    local data = 读取文件(path)
-    if data then
-        return assert(load(data, path, 'bt', env))(...)
+
+    if type(path) == 'string' then
+        local data = 读取文件(path)
+        if data then
+            return assert(load(data, path, 'bt', env))(...)
+        end
     end
 end
 
+if not gge.isdebug then
+    local olf = loadfile
+    function loadfile(file)
+        local r = olf(file)
+        if r then
+            return r
+        end
+        return gge.loadfile(file)
+    end
+    local odf = dofile
+    function dofile(file)
+        local r = odf(file)
+        if r then
+            return r
+        end
+        return gge.dofile(file)
+    end
+end
+
+function gge.loadfile(file, env)
+    if type(file) == 'string' then
+        local data = 读取文件(file:lower():gsub('\\', '/'))
+        if data then
+            return assert(load(data, file, 'bt', env))
+        end
+    end
+end
+
+function gge.dofile(file, env, ...)
+    if type(file) == 'string' then
+        return gge.loadfile(file, env)(...)
+    end
+end
 require('GGE')
 
 ggexpcall(require, entry)
