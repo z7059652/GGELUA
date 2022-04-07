@@ -1,7 +1,7 @@
 -- @Author              : GGELUA
 -- @Date                : 2022-03-07 18:52:00
 -- @Last Modified by    : baidwwy
--- @Last Modified time  : 2022-04-03 02:01:03
+-- @Last Modified time  : 2022-04-08 07:44:16
 
 local SDL = require('SDL')
 local ggetype = ggetype
@@ -28,6 +28,9 @@ function SDL音效:SDL音效(file)
 end
 
 function SDL音效:播放(loop)
+    if self:是否播放() then
+        return self
+    end
     if self:是否暂停() then
         self:恢复()
         return self
