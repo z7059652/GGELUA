@@ -1,7 +1,7 @@
 -- @Author              : GGELUA
 -- @Date                : 2022-04-03 14:00:28
 -- @Last Modified by    : baidwwy
--- @Last Modified time  : 2022-04-07 00:22:57
+-- @Last Modified time  : 2022-04-08 21:51:57
 
 local SDL = require 'SDL'
 local GUI控件 = require('GUI.控件')
@@ -24,7 +24,7 @@ do
                     if k == self._rbtn then
                         self._curspr = v
                     end
-                    if v.宽度 > self.宽度 or v.高度 > self.高度 then
+                    if self.宽度 == 0 or self.高度 == 0 then
                         self:置宽高(v.宽度, v.高度)
                     end
                     --rawset(t, k, v)
