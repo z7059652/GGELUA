@@ -1,7 +1,7 @@
 -- @Author              : GGELUA
 -- @Date                : 2022-03-07 18:52:00
 -- @Last Modified by    : baidwwy
--- @Last Modified time  : 2022-04-05 21:06:10
+-- @Last Modified time  : 2022-04-10 06:05:19
 
 local SDL = require 'SDL'
 local GUI控件 = require('GUI.控件')
@@ -49,11 +49,11 @@ function GUI进度:_消息事件(msg)
                     if v.button == SDL.BUTTON_LEFT then
                         self._ldown = true
                         local x, y = self:取坐标()
-                        self:发送消息('左键按下', x, y, msg)
+                        self:发送消息('左键按下', x, y, v.x, v.y, msg)
                     elseif v.button == SDL.BUTTON_RIGHT then
                         self._rdown = true
                         local x, y = self:取坐标()
-                        self:发送消息('右键按下', x, y, msg)
+                        self:发送消息('右键按下', x, y, v.x, v.y, msg)
                     end
                 end
             end
@@ -66,12 +66,12 @@ function GUI进度:_消息事件(msg)
                     if v.button == SDL.BUTTON_LEFT then
                         if self._ldown then
                             local x, y = self:取坐标()
-                            self:发送消息('左键弹起', x, y, msg)
+                            self:发送消息('左键弹起', x, y, v.x, v.y, msg)
                         end
                     elseif v.button == SDL.BUTTON_RIGHT then
                         if self._rdown then
                             local x, y = self:取坐标()
-                            self:发送消息('右键弹起', x, y, msg)
+                            self:发送消息('右键弹起', x, y, v.x, v.y, msg)
                         end
                     end
                 end
@@ -85,10 +85,10 @@ function GUI进度:_消息事件(msg)
                     v.control = self
                     self._focus = true
                     local x, y = self:取坐标()
-                    self:发送消息('获得鼠标', x, y, msg)
+                    self:发送消息('获得鼠标', x, y, v.x, v.y, msg)
                 elseif self._focus then
                     self._focus = nil
-                    self:发送消息('失去鼠标', v.x, v.y, msg)
+                    self:发送消息('失去鼠标', v.x, v.y, v.x, v.y, msg)
                 end
             end
         end

@@ -1,7 +1,7 @@
 -- @Author              : GGELUA
 -- @Date                : 2022-03-07 18:52:00
 -- @Last Modified by    : baidwwy
--- @Last Modified time  : 2022-04-06 11:54:37
+-- @Last Modified time  : 2022-04-10 06:19:35
 
 local SDL = require 'SDL'
 --===================================================================
@@ -576,13 +576,13 @@ function GUI输入:_消息事件(msg)
                 if self:检查点(v.x, v.y) then
                     self._focus = true
                     local x, y = self:取坐标()
-                    if self:发送消息('获得鼠标', x, y, msg) then
+                    if self:发送消息('获得鼠标', x, y, v.x, v.y, msg) then
                         v.typed, v.type = v.type, nil
                         v.control = self
                     end
                 elseif self._focus then
                     self._focus = nil
-                    self:发送消息('失去鼠标', v.x, v.y, msg)
+                    self:发送消息('失去鼠标', v.x, v.y, v.x, v.y, msg)
                 end
 
                 if self._按下位置 and v.state == SDL.BUTTON_LMASK then --左键按住

@@ -1,7 +1,7 @@
 -- @Author              : GGELUA
 -- @Date                : 2022-04-03 14:00:28
 -- @Last Modified by    : baidwwy
--- @Last Modified time  : 2022-04-07 10:34:34
+-- @Last Modified time  : 2022-04-10 05:58:19
 
 local SDL = require 'SDL'
 
@@ -259,6 +259,9 @@ function GUI控件:绝对可见()
 end
 
 function GUI控件:置坐标(x, y) --坐标是相对于父的
+    if not y and ggetype(x) == 'GGE坐标' then
+        x, y = x:unpack()
+    end
     self.x = x or 0
     self.y = y or 0
     self.矩形:置坐标(self:取坐标())
@@ -293,6 +296,9 @@ function GUI控件:取坐标()
 end
 
 function GUI控件:置中心(x, y)
+    if not y and ggetype(x) == 'GGE坐标' then
+        x, y = x:unpack()
+    end
     self._hx = math.floor(x) or 0
     self._hy = math.floor(y) or 0
     self.矩形:置坐标(self:取坐标())

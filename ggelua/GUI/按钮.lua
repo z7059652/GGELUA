@@ -1,7 +1,7 @@
 -- @Author              : GGELUA
 -- @Date                : 2022-04-03 14:00:28
 -- @Last Modified by    : baidwwy
--- @Last Modified time  : 2022-04-08 21:51:57
+-- @Last Modified time  : 2022-04-10 06:02:45
 
 local SDL = require 'SDL'
 local GUI控件 = require('GUI.控件')
@@ -152,9 +152,9 @@ do
                             self._btn = 2
                             local x, y = self:取坐标()
                             if v.button == SDL.BUTTON_LEFT then
-                                self:发送消息('左键按下', x, y, msg)
+                                self:发送消息('左键按下', x, y, v.x, v.y, msg)
                             elseif v.button == SDL.BUTTON_RIGHT then
-                                self:发送消息('右键按下', x, y, msg)
+                                self:发送消息('右键按下', x, y, v.x, v.y, msg)
                             end
                         end
                     end
@@ -170,11 +170,11 @@ do
                                 self._btn = 3
                                 local x, y = self:取坐标()
                                 if v.button == SDL.BUTTON_LEFT then
-                                    if self:发送消息('左键弹起', x, y, msg) ~= false then --阻止选中
+                                    if self:发送消息('左键弹起', x, y, v.x, v.y, msg) ~= false then --阻止选中
                                         msg.按钮弹起 = self --已经按下
                                     end
                                 elseif v.button == SDL.BUTTON_RIGHT then
-                                    self:发送消息('右键弹起', x, y, msg)
+                                    self:发送消息('右键弹起', x, y, v.x, v.y, msg)
                                 end
                             end
                         end

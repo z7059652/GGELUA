@@ -1,7 +1,7 @@
 -- @Author              : GGELUA
 -- @Date                : 2022-03-07 18:52:00
 -- @Last Modified by    : baidwwy
--- @Last Modified time  : 2022-04-05 21:05:21
+-- @Last Modified time  : 2022-04-10 02:30:44
 
 local SDL = require 'SDL'
 local GUI控件 = require('GUI.控件')
@@ -85,18 +85,16 @@ function GUI文本:_消息事件(msg)
                 if cb then
                     if v.button == SDL.BUTTON_LEFT then
                         self._lcb = cb
-                        if rawget(self, '左键按下') then
-                            v.typed, v.type = v.type, nil
-                            v.control = self
-                            self:发送消息('左键按下', cb, msg)
-                        end
+
+                        v.typed, v.type = v.type, nil
+                        v.control = self
+                        self:发送消息('左键按下', cb, msg)
                     elseif v.button == SDL.BUTTON_RIGHT then
                         self._rcb = cb
-                        if rawget(self, '右键按下') then
-                            v.typed, v.type = v.type, nil
-                            v.control = self
-                            self:发送消息('右键按下', cb, msg)
-                        end
+
+                        v.typed, v.type = v.type, nil
+                        v.control = self
+                        self:发送消息('右键按下', cb, msg)
                     end
                 end
             end
@@ -105,13 +103,13 @@ function GUI文本:_消息事件(msg)
             if self:检查点(v.x, v.y) then
                 local cb = self:检查回调(v.x, v.y)
                 if cb then
-                    if v.button == SDL.BUTTON_LEFT and rawget(self, '回调左键弹起') then
+                    if v.button == SDL.BUTTON_LEFT then
                         if cb == self._lcb then
                             v.typed, v.type = v.type, nil
                             v.control = self
                             self:发送消息('回调左键弹起', cb, msg)
                         end
-                    elseif v.button == SDL.BUTTON_RIGHT and rawget(self, '回调右键弹起') then
+                    elseif v.button == SDL.BUTTON_RIGHT then
                         if cb == self._rcb then
                             v.typed, v.type = v.type, nil
                             v.control = self
@@ -149,12 +147,12 @@ function GUI文本:_消息事件(msg)
                 elseif math.abs(py) > self._max then
                     py = -self._max
                 end
+
                 if self.滑块 then
                     self.滑块:置位置(math.floor(math.abs(py) / self._max * self.滑块.最大值))
                 else
                     self._py = math.floor(py)
                 end
-
                 self:发送消息('鼠标滚轮', py == -self._max)
             end
         elseif v.type == SDL.MOUSE_WHEEL then

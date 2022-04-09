@@ -1,7 +1,7 @@
 -- @Author              : GGELUA
 -- @Date                : 2022-03-07 18:52:00
 -- @Last Modified by    : baidwwy
--- @Last Modified time  : 2022-04-07 10:41:10
+-- @Last Modified time  : 2022-04-10 02:49:59
 
 local SDL = require 'SDL'
 
@@ -363,27 +363,24 @@ do
                 if self:检查点(v.x, v.y) then
                     v.typed, v.type = v.type, nil
                     v.control = self
-
+                    self._DOWN = {x = v.x, y = v.y, py = self._py}
                     if not self.是否禁止 then
                         local i, item = self:检查项目(v.x, v.y)
                         if item then
                             self._curdown = i
                             if v.button == SDL.BUTTON_LEFT then
                                 self.选中行 = i
-                                if rawget(self, '左键按下') then
-                                    local x, y = item:取坐标()
-                                    self:发送消息('左键按下', x, y, i, item, msg)
-                                end
+                                local x, y = item:取坐标()
+                                self:发送消息('左键按下', x, y, i, item, msg)
                             elseif v.button == SDL.BUTTON_RIGHT then
-                                if rawget(self, '右键按下') then
-                                    local x, y = item:取坐标()
-                                    self:发送消息('右键按下', x, y, i, item, msg)
-                                end
+                                local x, y = item:取坐标()
+                                self:发送消息('右键按下', x, y, i, item, msg)
                             end
                         end
                     end
                 end
             elseif v.type == SDL.MOUSE_UP then
+                self._DOWN = false
                 if self:检查点(v.x, v.y) then
                     v.typed, v.type = v.type, nil
                     v.control = self
@@ -402,35 +399,49 @@ do
                                     end
                                     item:发送消息('左键弹起', x, y, i, item, msg)
                                 end
-                                if rawget(self, '左键弹起') then
-                                    self:发送消息('左键弹起', x, y, i, item, msg)
-                                end
-                                if v.clicks == 2 and rawget(self, '左键双击') then
+
+                                self:发送消息('左键弹起', x, y, i, item, msg)
+                                if v.clicks == 2 then
                                     self:发送消息('左键双击', x, y, i, item, msg)
                                 end
                             elseif v.button == SDL.BUTTON_RIGHT then
-                                if rawget(self, '右键弹起') then
-                                    local x, y = item:取坐标()
-                                    self:发送消息('右键弹起', x, y, i, item, msg)
-                                end
+                                local x, y = item:取坐标()
+                                self:发送消息('右键弹起', x, y, i, item, msg)
                             end
                         end
                     end
                 end
             elseif v.type == SDL.MOUSE_MOTION then
-                if self:检查点(v.x, v.y) then
-                    if v.state == 0 then
-                        v.typed, v.type = v.type, nil
-                        v.control = self
-
-                        local i, item = _刷新焦点(self, v.x, v.y)
-                        if item then
-                            local x, y = item:取坐标()
-                            self:发送消息('获得鼠标', x, y, i, item, msg)
+                if gge.platform == 'Windows' then
+                    if self:检查点(v.x, v.y) then
+                        if v.state == 0 then
+                            v.typed, v.type = v.type, nil
+                            v.control = self
+                            local i, item = _刷新焦点(self, v.x, v.y)
+                            if item then
+                                local x, y = item:取坐标()
+                                self:发送消息('获得鼠标', x, y, i, item, msg)
+                            end
                         end
+                    else
+                        self.焦点行 = 0
                     end
-                else
-                    self.焦点行 = 0
+                elseif self._DOWN and v.state & SDL.BUTTON_LMASK == SDL.BUTTON_LMASK then
+                    self._curdown = false
+                    local py = self._DOWN.py + (v.y - self._DOWN.y)
+                    if py > 0 then
+                        py = 0
+                    elseif math.abs(py) > self._max then
+                        py = -self._max
+                    end
+
+                    if self.滑块 then
+                        self.滑块:置位置(math.floor(math.abs(py) / self._max * self.滑块.最大值))
+                    else
+                        self._py = math.floor(py)
+                        _滚动(self)
+                    end
+                    self:发送消息('鼠标滚轮', py == -self._max)
                 end
             elseif v.type == SDL.MOUSE_WHEEL then
                 local x, y = SDL._wins[v.windowID]:取鼠标坐标()
@@ -442,9 +453,7 @@ do
 
                         if py > 0 then
                             py = 0
-                        end
-
-                        if math.abs(py) > self._max then
+                        elseif math.abs(py) > self._max then
                             py = -self._max
                         end
 
