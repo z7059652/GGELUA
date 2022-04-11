@@ -1,7 +1,7 @@
 -- @Author              : GGELUA
 -- @Date                : 2022-03-07 18:52:00
 -- @Last Modified by    : baidwwy
--- @Last Modified time  : 2022-04-10 06:19:35
+-- @Last Modified time  : 2022-04-11 08:07:58
 
 local SDL = require 'SDL'
 --===================================================================
@@ -537,10 +537,9 @@ function GUI输入:_消息事件(msg)
                     if self:检查点(v.x, v.y) then
                         v.typed, v.type = v.type, nil
                         v.control = self
+                        _计算光标位置(self, v.x, v.y)
                         self._按下位置 = self._光标位置
                         self._左键按下 = true
-
-                        _计算光标位置(self, v.x, v.y)
                     else
                         self:取消选中()
                     end
@@ -573,19 +572,19 @@ function GUI输入:_消息事件(msg)
                     self._左键按下 = nil
                 end
             elseif v.type == SDL.MOUSE_MOTION then --拖选
-                if self:检查点(v.x, v.y) then
-                    self._focus = true
-                    local x, y = self:取坐标()
-                    if self:发送消息('获得鼠标', x, y, v.x, v.y, msg) then
-                        v.typed, v.type = v.type, nil
-                        v.control = self
+                if v.state == 0 then
+                    if self:检查点(v.x, v.y) then
+                        self._focus = true
+                        local x, y = self:取坐标()
+                        if self:发送消息('获得鼠标', x, y, v.x, v.y, msg) then
+                            v.typed, v.type = v.type, nil
+                            v.control = self
+                        end
+                    elseif self._focus then
+                        self._focus = nil
+                        self:发送消息('失去鼠标', v.x, v.y, v.x, v.y, msg)
                     end
-                elseif self._focus then
-                    self._focus = nil
-                    self:发送消息('失去鼠标', v.x, v.y, v.x, v.y, msg)
-                end
-
-                if self._按下位置 and v.state == SDL.BUTTON_LMASK then --左键按住
+                elseif self._按下位置 and v.state == SDL.BUTTON_LMASK then --左键按住
                     v.type = nil
                     _计算光标位置(self, v.x, v.y)
                     _计算选中区域(self)
