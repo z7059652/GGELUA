@@ -1,7 +1,7 @@
 -- @Author              : GGELUA
 -- @Date                : 2022-03-07 18:52:00
 -- @Last Modified by    : baidwwy
--- @Last Modified time  : 2022-04-04 18:09:37
+-- @Last Modified time  : 2022-04-11 08:37:14
 
 local gge = require('ggelua')
 local SDL = require('SDL')
@@ -265,8 +265,11 @@ function SDL文字:置抗锯齿(v)
     return self
 end
 
-function SDL文字:取宽度(t)
+function SDL文字:取宽度(t, w)
     _set(self)
+    if w then
+        return self._font:MeasureUTF8(t, w)
+    end
     return (self._font:SizeUTF8(t))
 end
 

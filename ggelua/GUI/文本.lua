@@ -1,7 +1,7 @@
 -- @Author              : GGELUA
 -- @Date                : 2022-03-07 18:52:00
 -- @Last Modified by    : baidwwy
--- @Last Modified time  : 2022-04-10 02:30:44
+-- @Last Modified time  : 2022-04-11 00:05:06
 
 local SDL = require 'SDL'
 local GUI控件 = require('GUI.控件')
@@ -88,13 +88,13 @@ function GUI文本:_消息事件(msg)
 
                         v.typed, v.type = v.type, nil
                         v.control = self
-                        self:发送消息('左键按下', cb, msg)
+                        self:发送消息('回调左键按下', cb, msg)
                     elseif v.button == SDL.BUTTON_RIGHT then
                         self._rcb = cb
 
                         v.typed, v.type = v.type, nil
                         v.control = self
-                        self:发送消息('右键按下', cb, msg)
+                        self:发送消息('回调右键按下', cb, msg)
                     end
                 end
             end

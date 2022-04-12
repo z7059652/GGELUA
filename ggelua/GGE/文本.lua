@@ -1,7 +1,7 @@
--- @Author: GGELUA
--- @Date:   2021-09-17 08:26:43
+-- @Author              : GGELUA
+-- @Date                : 2022-03-29 21:50:26
 -- @Last Modified by    : baidwwy
--- @Last Modified time  : 2022-04-04 04:03:24
+-- @Last Modified time  : 2022-04-11 00:14:43
 
 local SDL = require 'SDL'
 
@@ -39,7 +39,7 @@ local _objmeta = {
     end
 }
 
-local _obj = function(t, x, o)
+local _newobj = function(t, x, o)
     local self = setmetatable({}, {__index = _objmeta})
     self.x = x
     self.o = o --obj
@@ -251,7 +251,7 @@ local function _Adjust(self)
                 local a, b = _split(str, width - x, font)
                 if a ~= '' then
                     w, h = font:取宽高(a)
-                    table.insert(line, _obj(v, x, font:取精灵(a):置中心(0, h)))
+                    table.insert(line, _newobj(v, x, font:取精灵(a):置中心(0, h)))
                     x = x + w
                 end
                 line.w = x
@@ -265,7 +265,7 @@ local function _Adjust(self)
                     str = b
                     goto loop
                 else
-                    table.insert(line, _obj(v, x, font:取精灵(b):置中心(0, h)))
+                    table.insert(line, _newobj(v, x, font:取精灵(b):置中心(0, h)))
                     x = x + w
                     if v.r or x == width then
                         line.w = x
@@ -276,7 +276,7 @@ local function _Adjust(self)
                 end
             else
                 if w > 0 then
-                    table.insert(line, _obj(v, x, font:取精灵(str):置中心(0, h)))
+                    table.insert(line, _newobj(v, x, font:取精灵(str):置中心(0, h)))
                     x = x + w
                 end
                 if v.r or x == width then
@@ -298,7 +298,7 @@ local function _Adjust(self)
                     line = {w = 0, h = fh}
                 end
                 if x + w <= width then
-                    table.insert(line, _obj(v, x, e:复制()))
+                    table.insert(line, _newobj(v, x, e:复制()))
                     x = x + w
                 end
                 if h > line.h then

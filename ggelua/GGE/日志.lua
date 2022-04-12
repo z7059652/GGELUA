@@ -1,7 +1,7 @@
--- @Author       : GGELUA
--- @Date         : 2021-10-30 13:05:32
--- @Last Modified by: baidwwy
--- @Last Modified time: 2021-12-07 02:58:28
+-- @Author              : GGELUA
+-- @Date                : 2022-03-07 18:52:00
+-- @Last Modified by    : baidwwy
+-- @Last Modified time  : 2022-04-11 15:40:42
 
 local cprint = require('cprint')
 local _isdebug = require('ggelua').isdebug
@@ -37,14 +37,7 @@ function GGE日志:LOG(level, msg, ...)
     end
     local time = os.time()
     cprint(string.format('[%s] [%s] [%s] %s', os.date('%X', time), self.logger, lcolor[level] or level, tostring(msg)))
-    local r =
-        self.SQL:执行(
-        "insert into log(date,logger,level,message) values('%d','%s','%s','%s')",
-        time,
-        self.logger,
-        level,
-        msg
-    )
+    local r = self.SQL:执行("insert into log(date,logger,level,message) values('%d','%s','%s','%s')", time, self.logger, level, msg)
 end
 
 function GGE日志:INFO(msg, ...)
