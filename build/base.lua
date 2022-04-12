@@ -1,7 +1,7 @@
--- @Author       : GGELUA
--- @Date         : 2021-12-07 21:06:14
--- @Last Modified by    : GGELUA
--- @Last Modified time  : 2022-02-13 14:59:44
+-- @Author              : GGELUA
+-- @Last Modified by    : baidwwy
+-- @Date                : 2022-03-07 18:52:00
+-- @Last Modified time  : 2022-04-09 23:08:57
 
 io.stdout:setvbuf('no', 0)
 gge = package.loadlib('ggelua', 'luaopen_ggelua')()
@@ -26,6 +26,7 @@ package.path = package.path .. ';.\\.vscode\\?.lua;.\\.ggelua\\?.lua'
 
 --转换到绝对路径
 local function 绝对路径(path, ...)
+    assert(type(path) == 'string', '路径错误:' .. tostring(path))
     if select('#', ...) > 0 then
         path = path:format(...)
     end
@@ -51,7 +52,7 @@ local function 绝对路径(path, ...)
 end
 
 local function 分割文本(str, mark)
-    if str then
+    if type(str) == 'string' then
         local r = {}
         if mark == '%' then
             mark = '([^' .. mark .. '%]+)'
@@ -70,48 +71,58 @@ local function 分割文本(str, mark)
 end
 
 function 创建目录(path)
-    path = path:gsub('\\', '/'):match('(.+)/')
-    path = 分割文本(path, '/')
-    for i, v in ipairs(path) do
-        lfs.mkdir(table.concat(path, '\\', 1, i))
+    if type(path) == 'string' then
+        path = path:gsub('\\', '/'):match('(.+)/')
+        path = 分割文本(path, '/')
+        for i, v in ipairs(path) do
+            lfs.mkdir(table.concat(path, '\\', 1, i))
+        end
     end
 end
 
 function 删除目录(path, all)
-    path = 绝对路径(path):gsub('/', '\\')
-    if all then
-        os.execute('RMDIR /S /Q ' .. path)
-    else
-        os.execute('RMDIR /Q ' .. path)
+    if type(path) == 'string' then
+        path = 绝对路径(path):gsub('/', '\\')
+        if all then
+            os.execute('RMDIR /S /Q ' .. path)
+        else
+            os.execute('RMDIR /Q ' .. path)
+        end
     end
 end
 
 function 判断文件(path)
-    local file = io.open(绝对路径(path), 'rb')
-    if file then
-        file:close()
-        return true
+    if type(path) == 'string' then
+        local file = io.open(绝对路径(path), 'rb')
+        if file then
+            file:close()
+            return true
+        end
     end
     return false
 end
 
 function 读取文件(path)
-    local file = io.open(绝对路径(path), 'rb')
-    if file then
-        local data = file:read('a')
-        file:close()
-        return data
+    if type(path) == 'string' then
+        local file = io.open(绝对路径(path), 'rb')
+        if file then
+            local data = file:read('a')
+            file:close()
+            return data
+        end
     end
 end
 
 function 写出文件(path, data)
-    local file = io.open(绝对路径(path), 'wb')
-    if file then
-        file:write(data)
-        file:close()
-        return true
-    else
-        print('写出失败', path)
+    if type(path) == 'string' then
+        local file = io.open(绝对路径(path), 'wb')
+        if file then
+            file:write(data)
+            file:close()
+            return true
+        else
+            print('写出失败', path)
+        end
     end
     return false
 end
