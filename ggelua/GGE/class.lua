@@ -1,12 +1,12 @@
 -- @Author              : GGELUA
 -- @Date                : 2022-03-07 18:52:00
 -- @Last Modified by    : baidwwy
--- @Last Modified time  : 2022-04-11 15:41:26
+-- @Last Modified time  : 2022-04-21 08:47:27
 
 local _CLASS, _METAS = package.loaded, {}
 local type = type
 local ipairs = ipairs
-
+local pairs = pairs
 local getmetatable = getmetatable
 local setmetatable = setmetatable
 local unpack = table.unpack
@@ -86,14 +86,28 @@ end
 
 local function class(name, ...)
     assert(type(name) == 'string', '必须要有类名')
-    assert(_CLASS[name] == nil, name .. ':类名已经存在')
-    local meta, cobj
-    meta = {
+    if _CLASS[name] then
+        warn(string.format('class[%s]被重写', name))
+        local meta = _CLASS[name].__metatable
+        local list = {}
+        for k in pairs(meta) do
+            if k:sub(1, 2) ~= '__' then
+                list[k] = true
+            end
+        end
+        for k in pairs(list) do
+            meta[k] = nil
+        end
+        meta.__super = assert_super {...}
+        return _CLASS[name]
+    end
+    local meta = {
         __name = name,
         __index = class_index,
         __super = assert_super {...}
     }
     meta.__metatable = meta --禁止修改
+    local cobj
     cobj = {
         --初始化 = false,[name] = false,
         创建 = function(...)
@@ -112,7 +126,7 @@ local function class(name, ...)
             return obj, table.unpack(ret)
         end
     }
-    --_METAS[name]   = meta
+
     _METAS[cobj] = meta --_METAS[class] = meta
     _CLASS[name] = cobj --package.loaded
     return setmetatable(
@@ -178,6 +192,9 @@ local function class(name, ...)
                 --     return
                 end
                 meta[k] = value
+            end,
+            __pairs = function(t)
+                return next, meta
             end
         }
     )
