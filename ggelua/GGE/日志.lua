@@ -1,7 +1,7 @@
 -- @Author              : GGELUA
 -- @Date                : 2022-03-07 18:52:00
 -- @Last Modified by    : baidwwy
--- @Last Modified time  : 2022-04-11 15:40:42
+-- @Last Modified time  : 2022-04-14 07:25:26
 
 local cprint = require('cprint')
 local _isdebug = require('ggelua').isdebug
@@ -14,12 +14,12 @@ local lcolor = {
 local GGE日志 = class('GGE日志')
 
 function GGE日志:GGE日志(file, logger)
-    self.logger = logger or 'GGELUA'
-    self.SQL = require('LIB.SQLITE3')(file or 'log.db3')
+    self._logger = logger or 'GGELUA'
+    self._DB = require('LIB.SQLITE3')(file or 'log.db3')
 
-    local r = self.SQL:取值("select count(*) from sqlite_master where name='log';")
+    local r = self._DB:取值("select count(*) from sqlite_master where name='log';")
     if r == 0 then
-        self.SQL:执行 [[
+        self._DB:执行 [[
             CREATE TABLE "log" (
                 "date" integer NOT NULL,
                 "logger" TEXT,
@@ -36,8 +36,8 @@ function GGE日志:LOG(level, msg, ...)
         msg = msg:format(...)
     end
     local time = os.time()
-    cprint(string.format('[%s] [%s] [%s] %s', os.date('%X', time), self.logger, lcolor[level] or level, tostring(msg)))
-    local r = self.SQL:执行("insert into log(date,logger,level,message) values('%d','%s','%s','%s')", time, self.logger, level, msg)
+    cprint(string.format('[%s] [%s] [%s] %s', os.date('%X', time), self._logger, lcolor[level] or level, tostring(msg)))
+    local r = self._DB:执行("insert into log(date,logger,level,message) values('%d','%s','%s','%s')", time, self._logger, level, msg)
 end
 
 function GGE日志:INFO(msg, ...)
