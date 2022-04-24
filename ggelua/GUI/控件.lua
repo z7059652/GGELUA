@@ -1,7 +1,7 @@
 -- @Author              : GGELUA
 -- @Date                : 2022-04-03 14:00:28
 -- @Last Modified by    : baidwwy
--- @Last Modified time  : 2022-04-10 05:58:19
+-- @Last Modified time  : 2022-04-14 23:35:23
 
 local SDL = require 'SDL'
 
@@ -366,8 +366,10 @@ function GUI控件:检查点(x, y)
 end
 
 function GUI控件:检查透明(x, y)
-    if self._spr and type(self._spr.取透明) == 'function' then
-        return self._spr:取透明(x, y) > 0
+    if self:检查点(x, y) then
+        if self._spr and type(self._spr.取透明) == 'function' then
+            return self._spr:取透明(x, y) > 0
+        end
     end
     return false
 end
