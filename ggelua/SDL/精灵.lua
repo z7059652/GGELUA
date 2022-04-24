@@ -1,7 +1,7 @@
 -- @Author              : GGELUA
 -- @Date                : 2022-03-22 21:22:22
 -- @Last Modified by    : baidwwy
--- @Last Modified time  : 2022-04-04 06:52:02
+-- @Last Modified time  : 2022-04-14 23:18:23
 
 local SDL = require('SDL')
 local assert = assert
@@ -219,6 +219,9 @@ function SDL精灵:取透明(x, y)
             return self._tex:GetTextureAlpha(x - self._x, y - self._y)
         end
         return self._a or 0 --self._tex:GetTextureAlphaMod()
+    end
+    if x and y then
+        return self:检查点(x, y) and self._a or 0
     end
     return self._a or 0
 end
