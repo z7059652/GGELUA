@@ -1,7 +1,7 @@
 -- @Author              : GGELUA
 -- @Date                : 2022-03-21 14:01:02
 -- @Last Modified by    : baidwwy
--- @Last Modified time  : 2022-04-01 02:00:06
+-- @Last Modified time  : 2022-04-26 20:15:49
 
 local SDL = require('SDL')
 local gge = require('ggelua')
@@ -83,7 +83,12 @@ function SDL窗口:SDL窗口(t)
         flags = flags | 0x00010000 --SDL_WINDOW_SKIP_TASKBAR
     end
 
-    self._win = assert(SDL.CreateWindow(self.标题, t.x, t.y, self.宽度, self.高度, flags), SDL.GetError())
+    if t.异形 then
+        self._win = assert(SDL.CreateShapedWindow(self.标题, t.x, t.y, self.宽度, self.高度, flags), SDL.GetError())
+    else
+        self._win = assert(SDL.CreateWindow(self.标题, t.x, t.y, self.宽度, self.高度, flags), SDL.GetError())
+    end
+
     local id = self._win:GetWindowID()
     SDL._wins[id] = self
 
@@ -112,6 +117,9 @@ function SDL窗口:SDL窗口(t)
     --设置黑色
     self:渲染清除(0, 0, 0)
     self:渲染结束()
+    if self._rd then
+        self._rd:RenderFlush()
+    end
 
     self._reg = setmetatable({}, {__mode = 'k'}) --注册消息
     self._tick = {}
@@ -416,6 +424,15 @@ function SDL窗口:取标题()
     return self._win:GetWindowTitle()
 end
 
+function SDL窗口:置图像(v)
+    assert(SDL._mth == SDL.ThreadID(), '无法在线程中调用')
+    if ggetype(v) == 'SDL图像' and self._win:IsShapedWindow() then
+        local sf = v:取对象()
+        self._win:SetWindowSize(sf.w, sf.h)
+        return self._win:SetWindowShape(sf)
+    end
+end
+
 function SDL窗口:置图标(v)
     assert(SDL._mth == SDL.ThreadID(), '无法在线程中调用')
     if ggetype(v) == 'SDL图像' then
@@ -425,6 +442,9 @@ end
 
 function SDL窗口:置坐标(x, y)
     assert(SDL._mth == SDL.ThreadID(), '无法在线程中调用')
+    if not y and ggetype(x) == 'GGE坐标' then
+        x, y = x:unpack()
+    end
     self._win:SetWindowPosition(x, y)
 end
 
