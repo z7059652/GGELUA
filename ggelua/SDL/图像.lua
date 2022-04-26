@@ -1,7 +1,7 @@
 -- @Author              : GGELUA
 -- @Date                : 2022-03-07 18:52:00
 -- @Last Modified by    : baidwwy
--- @Last Modified time  : 2022-04-04 06:42:10
+-- @Last Modified time  : 2022-04-25 09:09:48
 
 local SDL = require('SDL')
 local ggetype = ggetype
@@ -130,6 +130,10 @@ function SDL图像:保存文件(file, tp, quality)
     elseif tp == 'JPG' then
         return self._sf:SaveJPG(file, quality)
     end
+end
+
+function SDL图像:置透明色(r, g, b)
+    return self._sf:SetColorKey(r, g, b)
 end
 
 function SDL图像:取透明色()
