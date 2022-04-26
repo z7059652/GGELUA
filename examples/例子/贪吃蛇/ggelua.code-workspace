@@ -1,0 +1,24 @@
+{
+    "folders": [
+        {
+            "path": "."
+        },
+        {
+            "path": "X:\\GGELUA\\GGELUA2\\ggelua"
+        }
+    ],
+    "settings": {
+        "fileheader.customMade": {
+            "Author": "GGELUA", //作者名称
+            "Date": "Do not edit", // 设置后默认设置文件生成时间
+            "LastEditors": "GGELUA",
+            "LastEditTime": "Do not edit", // 设置后，保存文件更改默认更新最后编辑时间
+        },
+        "fileheader.configObj": {
+            "specialOptions": {
+                "LastEditTime": "Last Modified time",
+                "LastEditors": "Last Modified by",
+            },
+        }
+    },
+}
