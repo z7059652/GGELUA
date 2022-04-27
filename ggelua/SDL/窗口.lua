@@ -1,7 +1,7 @@
 -- @Author              : GGELUA
 -- @Date                : 2022-03-21 14:01:02
 -- @Last Modified by    : baidwwy
--- @Last Modified time  : 2022-04-28 04:55:35
+-- @Last Modified time  : 2022-04-28 05:46:06
 
 local SDL = require('SDL')
 local gge = require('ggelua')
@@ -102,8 +102,10 @@ function SDL窗口:SDL窗口(t)
         SDL._mth = SDL.ThreadID()
         SDL._win = self
         SDL.FPS = self.帧率
-        if SDL.FPS > 0 then
-            SDL._ft = 1 / SDL.FPS
+        self._ft = 1 / SDL.FPS
+        self._dt = 0
+        if SDL.FPS > 0 and (SDL._ft == 0 or self._ft < SDL._ft) then
+            SDL._ft = self._ft
         end
     end
 
@@ -215,10 +217,16 @@ function SDL窗口:_Event(t, ...)
             _Destroy(self)
             return SDL._win == self
         else
-            self.dt = ...
-            _Sendreg(self, '更新事件', ...) --注册事件
-            _Sendmsg(self, '更新事件', ...)
-            _Sendmsg(self, '渲染事件', ...)
+            local dt = ...
+            if dt + 0.001 > self._ft then
+                self.dt = dt
+                self._dt = 0
+                _Sendreg(self, '更新事件', ...) --注册事件
+                _Sendmsg(self, '更新事件', ...)
+                _Sendmsg(self, '渲染事件', ...)
+            else
+                self._dt = self._dt + dt
+            end
         end
     elseif t == ggeinit then
         do --设置黑色
@@ -352,6 +360,9 @@ function SDL窗口:显示图像(sf, x, y, rect)
 end
 
 function SDL窗口:取FPS()
+    if not SDL._fps then
+        SDL._fps = 0
+    end
     return SDL.FPS
 end
 
