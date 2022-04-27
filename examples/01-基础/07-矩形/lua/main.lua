@@ -1,7 +1,7 @@
 -- @Author              : GGELUA
 -- @Last Modified by    : baidwwy
 -- @Date                : 2022-03-23 10:09:30
--- @Last Modified time  : 2022-03-23 11:24:09
+-- @Last Modified time  : 2022-04-28 06:14:24
 
 local SDL = require('SDL')
 引擎 =
@@ -13,7 +13,7 @@ local SDL = require('SDL')
 }
 
 function 引擎:初始化()
-    ttf = require('SDL.文字')('../../../assets/simsun.ttc', 20)
+    ttf = require('SDL.文字')('assets/simsun.ttc', 20)
     rect = require('SDL.矩形')(200, 50, 100, 100)
     rect2 = require('SDL.矩形')(200, 50, 50, 50)
 end
