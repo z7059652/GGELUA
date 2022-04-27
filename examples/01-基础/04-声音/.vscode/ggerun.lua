@@ -1,10 +1,11 @@
 -- @Author       : GGELUA
 -- @Date         : 2022-01-17 02:57:37
 -- @Last Modified by    : baidwwy
--- @Last Modified time  : 2022-01-22 14:19:27
+-- @Last Modified time  : 2022-04-28 06:12:27
 
-print('ggerun',arg[1])
-if arg[1]=='android' then
+print('ggerun', arg[1])
+复制文件('assets/test.mp3', './assets/test.mp3')
+if arg[1] == 'android' then
     编译目录('ggelua')
     编译目录('./lua')
     -- for path,rel in 遍历目录('./data') do
@@ -15,5 +16,4 @@ if arg[1]=='android' then
     -- end
     写出脚本('./assets/ggelua')
 else
-
 end

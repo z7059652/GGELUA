@@ -1,7 +1,7 @@
 -- @Author              : GGELUA
 -- @Last Modified by    : baidwwy
 -- @Date                : 2022-03-23 10:09:27
--- @Last Modified time  : 2022-03-23 10:55:57
+-- @Last Modified time  : 2022-04-28 06:12:32
 
 local SDL = require('SDL')
 引擎 =
@@ -11,8 +11,9 @@ local SDL = require('SDL')
     高度 = 600,
     帧率 = 60
 }
+
 function 引擎:初始化()
-    music = require('SDL.音乐')('../../../assets/test.mp3'):播放(true)
+    music = require('SDL.音乐')('assets/test.mp3'):播放(true)
 end
 
 function 引擎:更新事件(dt, x, y)
