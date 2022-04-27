@@ -1,7 +1,7 @@
 -- @Author              : GGELUA
 -- @Date                : 2022-03-21 14:01:02
 -- @Last Modified by    : baidwwy
--- @Last Modified time  : 2022-04-26 20:15:49
+-- @Last Modified time  : 2022-04-28 04:55:35
 
 local SDL = require('SDL')
 local gge = require('ggelua')
@@ -73,9 +73,10 @@ function SDL窗口:SDL窗口(t)
     if t.无边框 then --隐藏边框
         flags = flags | 0x00000010 --SDL_WINDOW_BORDERLESS
     end
-    if t.隐藏 then --隐藏窗口
-        flags = flags | 0x00000008 --SDL_WINDOW_HIDDEN
-    end
+
+    self.是否隐藏 = t.隐藏
+    flags = flags | 0x00000008 --SDL_WINDOW_HIDDEN
+
     if t.可调整 then --可调整
         flags = flags | 0x00000020 --SDL_WINDOW_RESIZABLE
     end
@@ -113,13 +114,6 @@ function SDL窗口:SDL窗口(t)
         self:SDL渲染() --创建渲染器
     end
     SDL.CreateEvent(ggeinit, id):PushEvent()
-
-    --设置黑色
-    self:渲染清除(0, 0, 0)
-    self:渲染结束()
-    if self._rd then
-        self._rd:RenderFlush()
-    end
 
     self._reg = setmetatable({}, {__mode = 'k'}) --注册消息
     self._tick = {}
@@ -227,10 +221,21 @@ function SDL窗口:_Event(t, ...)
             _Sendmsg(self, '渲染事件', ...)
         end
     elseif t == ggeinit then
+        do --设置黑色
+            if not self.是否隐藏 then
+                self._win:ShowWindow()
+            end
+
+            self:渲染开始(0, 0, 0)
+            self:渲染结束()
+            if self._rd then
+                self._rd:RenderFlush()
+            end
+        end
         if not self._inited and self.初始化 then
             ggexpcall(self.初始化, self)
-            self._inited = true
         end
+        self._inited = true
     elseif t == 0x100 then --SDL_QUIT
         self:_Event(0x200, SDL.WINDOWEVENT_CLOSE)
     elseif t == 0x200 or t == 0x1000 then --SDL_WINDOWEVENT|SDL_DROPFILE|SDL_DROPTEXT
@@ -360,9 +365,10 @@ function SDL窗口:消息框(title, message, flags)
     return self._win:ShowSimpleMessageBox(flags, tostring(title), tostring(message))
 end
 
-function SDL窗口:置隐藏(b)
+function SDL窗口:置隐藏(v)
     assert(SDL._mth == SDL.ThreadID(), '无法在线程中调用')
-    if b then
+    self.是否隐藏 = v
+    if v then
         self._win:HideWindow()
     else
         self._win:ShowWindow()
