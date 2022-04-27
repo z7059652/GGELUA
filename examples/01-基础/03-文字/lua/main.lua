@@ -1,7 +1,7 @@
 -- @Author              : GGELUA
 -- @Last Modified by    : baidwwy
 -- @Date                : 2022-03-23 10:09:27
--- @Last Modified time  : 2022-04-04 18:10:33
+-- @Last Modified time  : 2022-04-28 05:53:51
 
 local SDL = require('SDL')
 引擎 =
@@ -13,8 +13,8 @@ local SDL = require('SDL')
 }
 
 function 引擎:初始化()
-    ttf = require('SDL.文字')('../../../assets/simsun.ttc', 14)
-    ttf2 = require('SDL.文字')('../../../assets/simsun.ttc', 14, true, 0)
+    ttf = require('SDL.文字')('assets/simsun.ttc', 14)
+    ttf2 = require('SDL.文字')('assets/simsun.ttc', 14, true, 0)
     测试 = ttf:取精灵('测试测试')
     折行 = ttf2:取精灵('折\n行\n测\n试')
 
