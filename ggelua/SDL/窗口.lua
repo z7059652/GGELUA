@@ -1,7 +1,7 @@
 -- @Author              : GGELUA
 -- @Date                : 2022-03-21 14:01:02
 -- @Last Modified by    : baidwwy
--- @Last Modified time  : 2022-04-28 05:46:06
+-- @Last Modified time  : 2022-04-28 06:17:49
 
 local SDL = require('SDL')
 local gge = require('ggelua')
@@ -84,7 +84,7 @@ function SDL窗口:SDL窗口(t)
         flags = flags | 0x00010000 --SDL_WINDOW_SKIP_TASKBAR
     end
 
-    if t.异形 then
+    if gge.platform == 'Windows' and t.异形 then
         self._win = assert(SDL.CreateShapedWindow(self.标题, t.x, t.y, self.宽度, self.高度, flags), SDL.GetError())
     else
         self._win = assert(SDL.CreateWindow(self.标题, t.x, t.y, self.宽度, self.高度, flags), SDL.GetError())
@@ -448,6 +448,7 @@ function SDL窗口:置图像(v)
         self._win:SetWindowSize(sf.w, sf.h)
         return self._win:SetWindowShape(sf)
     end
+    return false
 end
 
 function SDL窗口:置图标(v)
