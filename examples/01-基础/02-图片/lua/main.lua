@@ -1,7 +1,7 @@
 -- @Author              : GGELUA
 -- @Last Modified by    : baidwwy
 -- @Date                : 2022-03-23 10:09:27
--- @Last Modified time  : 2022-03-23 11:04:00
+-- @Last Modified time  : 2022-04-28 06:08:07
 
 local SDL = require('SDL')
 引擎 =
@@ -9,18 +9,16 @@ local SDL = require('SDL')
     标题 = 'GGELUA_图片',
     宽度 = 800,
     高度 = 600,
-    帧率 = 60,
-    渲染器 = 'direct3d11'
+    帧率 = 60
 }
 
 function 引擎:初始化()
-    spr1 = require('SDL.精灵')('../../../assets/test.bmp')
-
-    tex = require('SDL.纹理')('../../../assets/test.bmp')
+    spr1 = require('SDL.精灵')('assets/test.bmp')
+    tex = require('SDL.纹理')('assets/test.bmp')
     spr2 = require('SDL.精灵')(tex)
 
     --图像一般用于切割，线程，和直读
-    sf = require('SDL.图像')('../../../assets/test.bmp'):到灰度()
+    sf = require('SDL.图像')('assets/test.bmp'):到灰度()
     spr3 = require('SDL.精灵')(sf)
 end
 
