@@ -1,7 +1,7 @@
 -- @Author              : GGELUA
 -- @Date                : 2021-12-15 23:37:41
--- @Last Modified by    : baidwwy
--- @Last Modified time  : 2022-04-28 06:02:49
+-- @Last Modified by    : GGELUA
+-- @Last Modified time  : 2022-04-28 07:54:17
 
 local _ENV = setmetatable(require('gsdl2'), {__index = _G})
 
@@ -707,7 +707,7 @@ local ipairs = ipairs
 local unpack = table.unpack
 local floor = math.floor
 
---SDL.EventState(513,true)--SDL_SYSWMEVENT
+--EventState(513,true)--SDL_SYSWMEVENT
 _wins = {} --setmetatable({}, {__mode="v"});
 _sfs = setmetatable({}, {__mode = 'kv'})
 _mixs = setmetatable({}, {__mode = 'kv'})
@@ -716,7 +716,7 @@ _ttfs = setmetatable({}, {__mode = 'kv'})
 local _userevents = {}
 function RegisterUserEvent(fun) --用户事件
     if type(fun) == 'function' then
-        local id = SDL.RegisterEvents()
+        local id = RegisterEvents()
         _userevents[id] = fun
         return id
     end
