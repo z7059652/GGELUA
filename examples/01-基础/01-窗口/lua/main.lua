@@ -1,8 +1,11 @@
 -- @Author              : GGELUA
 -- @Last Modified by    : baidwwy
 -- @Date                : 2022-03-23 10:09:27
--- @Last Modified time  : 2022-03-23 10:55:22
-
+-- @Last Modified time  : 2022-04-29 09:15:48
+if gge.isdebug and os.getenv('LOCAL_LUA_DEBUGGER_VSCODE') == '1' then
+    package.loaded['lldebugger'] = assert(loadfile(os.getenv('LOCAL_LUA_DEBUGGER_FILEPATH')))()
+    require('lldebugger').start()
+end
 local SDL = require('SDL')
 引擎 =
     require 'SDL.窗口' {

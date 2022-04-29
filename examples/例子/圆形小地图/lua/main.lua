@@ -1,7 +1,7 @@
 -- @Author              : GGELUA
 -- @Date                : 2021-04-08 08:00:20
 -- @Last Modified by    : GGELUA
--- @Last Modified time  : 2022-04-27 02:32:36
+-- @Last Modified time  : 2022-04-28 20:22:23
 -- 声明：例子仅供学习交流
 
 local GGEF = require('GGE.函数')
@@ -11,7 +11,7 @@ local SDL = require('SDL')
     标题 = '圆形地图框',
     宽度 = 800,
     高度 = 600,
-    帧率 = 30,
+    帧率 = 30
 }
 
 function 引擎:初始化()
@@ -19,7 +19,7 @@ function 引擎:初始化()
     渲染精灵 = 渲染区:到精灵()
     小地图 = require('SDL.精灵')('assets/镇魔谷.jpg')
 
-    if 1 == 2 then --两种方式
+    if 1 == 1 then --两种方式
         精灵 = require('SDL.精灵')('assets/B.png')
         抠图 = SDL.ComposeCustomBlendMode(1, 2, 1, 2, 1, 1)
         精灵:置混合(抠图)
