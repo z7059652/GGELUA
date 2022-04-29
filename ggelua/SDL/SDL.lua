@@ -1,7 +1,7 @@
 -- @Author              : GGELUA
 -- @Date                : 2021-12-15 23:37:41
--- @Last Modified by    : GGELUA
--- @Last Modified time  : 2022-04-28 07:54:17
+-- @Last Modified by    : baidwwy
+-- @Last Modified time  : 2022-04-29 19:41:44
 
 local _ENV = setmetatable(require('gsdl2'), {__index = _G})
 
@@ -743,10 +743,8 @@ local GetTicks = GetTicks
 local Frequency = GetPerformanceFrequency()
 local GetPerformanceCounter = GetPerformanceCounter
 local dt, ft, ct = 0, 0, 0, 0
-local mt = GetTicks()
 local pt = GetPerformanceCounter()
 _ft = 0 --帧率
-FPS = 0
 
 local e, x, y = CreateEvent(), 0, 0
 local PollEvent = e.PollEvent
@@ -788,15 +786,6 @@ function _G.main()
             end
         end
         ft = (GetPerformanceCounter() - pt) / Frequency --一帧所需时间
-
-        if _fps then
-            _fps = _fps + 1
-            if GetTicks() - mt > 1000 then
-                mt = GetTicks()
-                FPS = _fps
-                _fps = 0
-            end
-        end
 
         if ft < _ft then
             delay(floor((_ft - ft) * 1000))

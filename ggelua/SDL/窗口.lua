@@ -1,7 +1,7 @@
 -- @Author              : GGELUA
 -- @Date                : 2022-03-21 14:01:02
 -- @Last Modified by    : baidwwy
--- @Last Modified time  : 2022-04-28 06:17:49
+-- @Last Modified time  : 2022-04-29 19:45:00
 
 local SDL = require('SDL')
 local gge = require('ggelua')
@@ -98,15 +98,15 @@ function SDL窗口:SDL窗口(t)
     end
 
     SDL.ShowCursor(t.鼠标 ~= false)
+    self.FPS = self.帧率
+    self._ft = 1 / self.FPS
+    self._dt = 0
+    if self.FPS > 0 and (SDL._ft == 0 or self._ft < SDL._ft) then
+        SDL._ft = self._ft
+    end
     if not SDL._win then --主窗口
         SDL._mth = SDL.ThreadID()
         SDL._win = self
-        SDL.FPS = self.帧率
-        self._ft = 1 / SDL.FPS
-        self._dt = 0
-        if SDL.FPS > 0 and (SDL._ft == 0 or self._ft < SDL._ft) then
-            SDL._ft = self._ft
-        end
     end
 
     if t.渲染器 == false then
@@ -217,6 +217,14 @@ function SDL窗口:_Event(t, ...)
             _Destroy(self)
             return SDL._win == self
         else
+            if self._fps then
+                self._fps = self._fps + 1
+                if SDL.GetTicks() - self._ftk > 1000 then
+                    self._ftk = SDL.GetTicks()
+                    self.FPS = self._fps
+                    self._fps = 0
+                end
+            end
             local dt = ...
             if dt + 0.001 > self._ft then
                 self.dt = dt
@@ -360,10 +368,11 @@ function SDL窗口:显示图像(sf, x, y, rect)
 end
 
 function SDL窗口:取FPS()
-    if not SDL._fps then
-        SDL._fps = 0
+    if not self._fps then
+        self._fps = 0
+        self._ftk = SDL.GetTicks()
     end
-    return SDL.FPS
+    return self.FPS
 end
 
 function SDL窗口:取ID()
