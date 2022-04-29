@@ -1,7 +1,7 @@
 -- @Author              : GGELUA
 -- @Last Modified by    : baidwwy
 -- @Date                : 2022-03-07 18:52:00
--- @Last Modified time  : 2022-04-09 23:08:57
+-- @Last Modified time  : 2022-04-29 03:20:53
 
 io.stdout:setvbuf('no', 0)
 gge = package.loadlib('ggelua', 'luaopen_ggelua')()
@@ -312,10 +312,11 @@ end
 
 local function android_icon(file)
     local SDL = require('gsdl2')
-    require('gsdl2.image')
-    SDL.IMG_Init()
+    local IMG = require('gsdl2.image')
+    IMG.Init()
+
     if 判断文件(file) then
-        local src = SDL.IMG_LoadARGB8888(file)
+        local src = IMG.LoadARGB8888(file)
         if src then
             local name = {
                 --32 ldpi
