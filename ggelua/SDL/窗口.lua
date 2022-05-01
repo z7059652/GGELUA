@@ -1,7 +1,7 @@
 -- @Author              : GGELUA
 -- @Date                : 2022-03-21 14:01:02
 -- @Last Modified by    : baidwwy
--- @Last Modified time  : 2022-04-29 19:45:00
+-- @Last Modified time  : 2022-04-30 10:51:29
 
 local SDL = require('SDL')
 local gge = require('ggelua')
@@ -99,7 +99,7 @@ function SDL窗口:SDL窗口(t)
 
     SDL.ShowCursor(t.鼠标 ~= false)
     self.FPS = self.帧率
-    self._ft = 1 / self.FPS
+    self._ft = self.FPS > 0 and (1 / self.FPS) or 0
     self._dt = 0
     if self.FPS > 0 and (SDL._ft == 0 or self._ft < SDL._ft) then
         SDL._ft = self._ft
