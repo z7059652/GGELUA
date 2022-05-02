@@ -1,7 +1,7 @@
 -- @Author              : GGELUA
 -- @Date                : 2022-04-03 14:00:28
 -- @Last Modified by    : baidwwy
--- @Last Modified time  : 2022-04-14 23:14:43
+-- @Last Modified time  : 2022-05-03 06:39:18
 
 local SDL = require 'SDL'
 local GUI控件 = require('GUI.控件')
@@ -367,3 +367,5 @@ function GUI控件:创建单选按钮(name, x, y, w, h)
     table.insert(self.子控件, self[name])
     return self[name]
 end
+
+return GUI按钮

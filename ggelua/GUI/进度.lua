@@ -1,7 +1,7 @@
 -- @Author              : GGELUA
 -- @Date                : 2022-03-07 18:52:00
 -- @Last Modified by    : baidwwy
--- @Last Modified time  : 2022-04-10 06:05:19
+-- @Last Modified time  : 2022-05-03 06:39:36
 
 local SDL = require 'SDL'
 local GUI控件 = require('GUI.控件')
@@ -101,3 +101,5 @@ function GUI控件:创建进度(name, x, y, w, h)
     table.insert(self.子控件, self[name])
     return self[name]
 end
+
+return GUI进度

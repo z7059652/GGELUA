@@ -1,7 +1,7 @@
 -- @Author              : GGELUA
 -- @Date                : 2022-03-21 14:01:02
 -- @Last Modified by    : baidwwy
--- @Last Modified time  : 2022-04-30 10:51:29
+-- @Last Modified time  : 2022-05-03 06:37:07
 
 local SDL = require('SDL')
 local gge = require('ggelua')
@@ -98,10 +98,10 @@ function SDL窗口:SDL窗口(t)
     end
 
     SDL.ShowCursor(t.鼠标 ~= false)
-    self.FPS = self.帧率
+    self.FPS = math.abs(self.帧率)
     self._ft = self.FPS > 0 and (1 / self.FPS) or 0
     self._dt = 0
-    if self.FPS > 0 and (SDL._ft == 0 or self._ft < SDL._ft) then
+    if self._ft < SDL._ft then
         SDL._ft = self._ft
     end
     if not SDL._win then --主窗口
@@ -217,23 +217,22 @@ function SDL窗口:_Event(t, ...)
             _Destroy(self)
             return SDL._win == self
         else
-            if self._fps then
-                self._fps = self._fps + 1
-                if SDL.GetTicks() - self._ftk > 1000 then
-                    self._ftk = SDL.GetTicks()
-                    self.FPS = self._fps
-                    self._fps = 0
-                end
-            end
-            local dt = ...
-            if dt + 0.001 > self._ft then
-                self.dt = dt
+            local dt, x, y = ...
+            self._dt = self._dt + dt -- 多个不同帧率的窗口
+            if self._dt + 0.001 > self._ft then
+                self.dt = self._dt
                 self._dt = 0
-                _Sendreg(self, '更新事件', ...) --注册事件
-                _Sendmsg(self, '更新事件', ...)
-                _Sendmsg(self, '渲染事件', ...)
-            else
-                self._dt = self._dt + dt
+                _Sendreg(self, '更新事件', self.dt, x, y) --注册事件
+                _Sendmsg(self, '更新事件', self.dt, x, y)
+                _Sendmsg(self, '渲染事件', self.dt, x, y)
+                if self._fps then
+                    self._fps = self._fps + 1
+                    if SDL.GetTicks() - self._ftk > 1000 then
+                        self._ftk = SDL.GetTicks()
+                        self.FPS = self._fps
+                        self._fps = 0
+                    end
+                end
             end
         end
     elseif t == ggeinit then
