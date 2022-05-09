@@ -1,9 +1,10 @@
 -- @Author              : GGELUA
 -- @Date                : 2022-03-07 18:52:00
 -- @Last Modified by    : baidwwy
--- @Last Modified time  : 2022-03-28 02:28:24
+-- @Last Modified time  : 2022-05-06 09:02:53
 
 local SDL = require('SDL')
+local ggetype = ggetype
 
 local SDL读写 = class 'SDL读写'
 
@@ -24,6 +25,7 @@ function SDL读写:SDL读写(file, mode)
     if not self._rw then
         warn('打开失败->' .. file)
         warn(SDL.GetError())
+        return false
     end
 end
 

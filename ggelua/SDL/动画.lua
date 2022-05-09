@@ -1,24 +1,25 @@
 -- @Author              : GGELUA
 -- @Date                : 2022-03-07 18:52:00
 -- @Last Modified by    : baidwwy
--- @Last Modified time  : 2022-03-28 02:18:41
+-- @Last Modified time  : 2022-05-06 09:10:13
 
 local SDL = require('SDL')
 local IMG = SDL.IMG_Init()
 local ggetype = ggetype
+
 local GGE动画 = require('GGE.动画')
 local SDL动画 = class('SDL动画', GGE动画)
 
-function SDL动画:SDL动画(file)
+function SDL动画:SDL动画(obj)
     GGE动画.GGE动画(self)
-    local tp = ggetype(file)
+    local tp = ggetype(obj)
     local info
     if tp == 'string' then
-        info = IMG.LoadAnimation(file)
-    elseif tp == 'SDL读写' and a:取对象() then
-        info = IMG.LoadAnimation_RW(a:取对象())
+        info = assert(IMG.LoadAnimation(obj), SDL.GetError()))
+    elseif tp == 'SDL读写' and obj:取对象() then
+        info = assert(IMG.LoadAnimation_RW(obj:取对象()), SDL.GetError())
     elseif tp == 'SDL_RWops' then
-        info = IMG.LoadAnimation_RW(a)
+        info = assert(IMG.LoadAnimation_RW(obj), SDL.GetError())
     end
 
     if info then
@@ -28,8 +29,6 @@ function SDL动画:SDL动画(file)
         for i, v in ipairs(info.frames) do
             self:添加帧(require('SDL.精灵')(v))
         end
-    else
-        error(' 载入失败')
     end
 end
 
