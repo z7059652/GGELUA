@@ -1,7 +1,7 @@
--- @Author       : GGELUA
--- @Date         : 2021-09-17 08:26:43
+-- @Author              : GGELUA
 -- @Last Modified by    : baidwwy
--- @Last Modified time  : 2022-02-16 14:55:37
+-- @Date                : 2022-03-07 18:52:00
+-- @Last Modified time  : 2022-05-14 10:13:46
 
 local adler32 = require('zlib').adler32
 local m_pack = require('cmsgpack').pack
@@ -42,8 +42,9 @@ function RPCClient:RPCClient(mcall)
     local reg = {}
     _REG[self] = reg --private  注册表
     _CBK[self] = {} --private  回调表
+    self.REG = {}
     return setmetatable(
-        {},
+        self.REG,
         {
             __newindex = function(t, k, v)
                 if type(v) == 'function' then

@@ -1,7 +1,7 @@
 -- @Author              : GGELUA
--- @Date                : 2022-03-07 18:52:00
 -- @Last Modified by    : baidwwy
--- @Last Modified time  : 2022-03-28 02:21:36
+-- @Date                : 2022-03-07 18:52:00
+-- @Last Modified time  : 2022-05-14 10:14:34
 
 local SDL = require('SDL')
 local ggetype = ggetype
@@ -18,11 +18,21 @@ function SDL矩形:SDL矩形(x, y, w, h)
 end
 
 function SDL矩形:__index(k)
+    if k == '宽度' then
+        k = 'w'
+    elseif k == '高度' then
+        k = 'h'
+    end
     local t = rawget(self, '_rect')
     return t and t[k]
 end
 
 function SDL矩形:__newindex(k, v)
+    if k == '宽度' then
+        k = 'w'
+    elseif k == '高度' then
+        k = 'h'
+    end
     if k == 'x' or k == 'y' or k == 'w' or k == 'h' then
         self._rect[k] = v
     else

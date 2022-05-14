@@ -1,7 +1,7 @@
--- @Author: baidwwy
--- @Date:   2021-08-14 11:47:41
--- @Last Modified by: baidwwy
--- @Last Modified time: 2021-12-08 12:09:28
+-- @Author              : GGELUA
+-- @Last Modified by    : baidwwy
+-- @Date                : 2022-03-07 18:52:00
+-- @Last Modified time  : 2022-05-14 10:14:13
 --https://github.com/neoxic/lua-mongo/tree/master/doc
 
 local MG集合 = class('MG集合')
@@ -31,7 +31,7 @@ function MG集合:遍历(query, options, prefs)
     return self._col:find(query, options, prefs):iterator()
 end
 
-function MG集合:查询一条(query, options, prefs)
+function MG集合:查询一行(query, options, prefs)
     local r = self._col:findOne(query, options, prefs)
     return r and r:value()
 end
@@ -56,7 +56,7 @@ function MG集合:删除全部(query, options)
     return self._col:removeMany(query, options)
 end
 
-function MG集合:删除一条(query, options)
+function MG集合:删除一行(query, options)
     return self._col:removeOne(query, options)
 end
 
@@ -76,7 +76,7 @@ function MG集合:更新全部(query, document, options)
     return self._col:updateMany(query, document, options)
 end
 
-function MG集合:更新一条(query, document, options)
+function MG集合:更新一行(query, document, options)
     return self._col:updateOne(query, document, options)
 end
 

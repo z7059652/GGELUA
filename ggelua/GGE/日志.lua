@@ -1,8 +1,7 @@
 -- @Author              : GGELUA
--- @Date                : 2022-03-07 18:52:00
 -- @Last Modified by    : baidwwy
--- @Last Modified time  : 2022-04-14 07:25:26
-
+-- @Date                : 2022-03-07 18:52:00
+-- @Last Modified time  : 2022-05-14 10:13:20
 local cprint = require('cprint')
 local _isdebug = require('ggelua').isdebug
 local lcolor = {
@@ -57,4 +56,13 @@ function GGE日志:DEBUG(msg, ...)
         self:LOG('DEBUG', msg, ...)
     end
 end
+
+function GGE日志:print(...)
+    local arg = {}
+    for i = 1, select('#', ...) do
+        arg[i] = tostring(select(i, ...))
+    end
+    self:LOG('INFO', table.concat(arg, '\t'))
+end
+
 return GGE日志

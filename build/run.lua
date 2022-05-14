@@ -1,12 +1,12 @@
 -- @Author              : GGELUA
 -- @Date                : 2022-01-25 22:14:50
--- @Last Modified by    : baidwwy
--- @Last Modified time  : 2022-02-15 09:23:28
+-- @Last Modified by    : Please set LastEditors
+-- @Last Modified time  : 2022-05-12 21:14:40
 require('build/base')
 pcall(require, 'ggerun')
 
 if arg[1] == 'windows' then
-    执行('%s/GGELUAc.exe %s', 引擎目录, 项目目录)
+    执行('%s/GGELUAc.exe %s %s', 引擎目录, 项目目录, table.concat(arg, ' ', 3))
 else
     编译目录('ggelua')
     编译目录('./lua')

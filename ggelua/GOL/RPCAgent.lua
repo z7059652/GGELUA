@@ -1,7 +1,7 @@
--- @Author       : GGELUA
--- @Date         : 2021-09-17 08:26:43
--- @Last Modified by: baidwwy
--- @Last Modified time: 2021-12-08 11:57:22
+-- @Author              : GGELUA
+-- @Last Modified by    : baidwwy
+-- @Date                : 2022-03-07 18:52:00
+-- @Last Modified time  : 2022-05-14 10:13:39
 
 local adler32 = require('zlib').adler32
 local m_pack = require('cmsgpack').pack
@@ -24,9 +24,9 @@ function RPCAgent:RPCAgent()
     local reg = {}
     _REG[self] = reg --private
     _CBK[self] = {} --private
-
+    self.REG = {}
     return setmetatable(
-        {},
+        self.REG,
         {
             __newindex = function(t, k, v)
                 if type(v) == 'function' then
