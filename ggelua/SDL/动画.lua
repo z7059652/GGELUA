@@ -1,3 +1,11 @@
+--[[
+Author: zhuxn zhuxiangning.zxn@bytedance.com
+Date: 2024-03-27 15:53:44
+LastEditors: zhuxn zhuxiangning.zxn@bytedance.com
+LastEditTime: 2024-03-27 17:08:34
+FilePath: \GGELUA2\ggelua\SDL\动画.lua
+Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+--]]
 -- @Author              : GGELUA
 -- @Date                : 2022-03-07 18:52:00
 -- @Last Modified by    : baidwwy
@@ -15,7 +23,7 @@ function SDL动画:SDL动画(obj)
     local tp = ggetype(obj)
     local info
     if tp == 'string' then
-        info = assert(IMG.LoadAnimation(obj), SDL.GetError()))
+        info = assert(IMG.LoadAnimation(obj), SDL.GetError())
     elseif tp == 'SDL读写' and obj:取对象() then
         info = assert(IMG.LoadAnimation_RW(obj:取对象()), SDL.GetError())
     elseif tp == 'SDL_RWops' then

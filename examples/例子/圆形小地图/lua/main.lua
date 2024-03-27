@@ -1,3 +1,9 @@
+--[[
+Author: GGELUA
+Date: 2024-03-27 15:53:44
+Last Modified by: GGELUA
+Last Modified time: 2024-03-27 16:48:35
+--]]
 -- @Author              : GGELUA
 -- @Date                : 2021-04-08 08:00:20
 -- @Last Modified by    : GGELUA
@@ -68,6 +74,7 @@ function 引擎:键盘事件(KEY, KMOD, 状态, 按住)
 end
 
 function 引擎:鼠标事件(key, x, y, btn, ...)
+    print('hello', 按住)
 end
 
 function 引擎:输入事件()
